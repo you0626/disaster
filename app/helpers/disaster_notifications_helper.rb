@@ -1,0 +1,2 @@
+module DisasterNotificationsHelper
+end
