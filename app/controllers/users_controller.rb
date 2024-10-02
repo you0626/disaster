@@ -1,5 +1,5 @@
 class UsersController < ApplicationController
-  before_action :authenticate_user!, only: [:index]
+  before_action :authenticate_user!, except: [:index]
   before_action :update_user_last_login_at, if: :user_signed_in?
 
   def index
@@ -49,6 +49,10 @@ class UsersController < ApplicationController
   end
 
   def update_user_last_login_at
-    current_user.update_last_login_at
+    if user_signed_in?
+      user = current_user  # current_user を変数に保存
+      puts user.inspect  # user の内容を確認
+      user.update_last_login_at if user.is_a?(User)  # User オブジェクトであるか確認
+    end
   end
 end

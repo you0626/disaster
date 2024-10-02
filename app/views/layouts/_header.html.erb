@@ -1,5 +1,7 @@
 <header>
-  <div class="logo">災害用アプリ</div>
+  <div class="logo">
+    <%= link_to "災害用アプリ", users_path %>
+  </div>
   <nav>
     <ul>
       <% if user_signed_in? %>

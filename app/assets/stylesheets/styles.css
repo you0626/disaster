@@ -18,6 +18,15 @@ header {
   font-size: 24px; /* ロゴのフォントサイズ */
 }
 
+.logo a {
+  color: white;         /* 文字の色を白に */
+  text-decoration: none; /* リンクの下線を消す */
+}
+
+.logo a:hover {
+  color: white;         /* ホバー時も白いまま */
+}
+
 nav ul {
   list-style: none; /* リストのスタイルを無効化 */
   padding: 0; /* パディングを0に */
