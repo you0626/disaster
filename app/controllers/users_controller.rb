@@ -1,5 +1,5 @@
 class UsersController < ApplicationController
-  before_action :authenticate_user!, only: [:index]
+  before_action :authenticate_user!, except: [:index]
   before_action :update_user_last_login_at, if: :user_signed_in?
 
   def index
