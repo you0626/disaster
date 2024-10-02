@@ -33,7 +33,7 @@
 
     <section class="user-activity">
       <h2>最近のアクティビティ</h2>
-      <p>最後のログイン: <%= current_user.last_sign_in_at.strftime("%Y年%m月%d日 %H:%M") if current_user.last_sign_in_at %></p>
+      <p>最後のログイン: <%= current_user.last_login_at.strftime("%Y年%m月%d日 %H:%M") if current_user.last_login_at %></p>
     </section>
   <% end %>
 

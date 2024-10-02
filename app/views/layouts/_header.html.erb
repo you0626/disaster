@@ -1,19 +1,19 @@
-<!-- app/views/layouts/_header.html.erb -->
 <header>
   <div class="logo">災害用アプリ</div>
   <nav>
     <ul>
       <% if user_signed_in? %>
-        <li><%= link_to 'ログアウト', destroy_user_session_path, method: :delete %></li>
-        <li><%= link_to '避難所情報', '#' %></li>
-        <li><%= link_to '災害通知', '#' %></li>
-        <li><%= link_to 'チェックリスト', '#' %></li>
-        <li><%= link_to 'マニュアル', '#' %></li>
+        <li class="welcome-message">ようこそ、<%= current_user.name %>さん</li>
+        <li><%= link_to "ログアウト", destroy_user_session_path, method: :delete %></li>
+        <li><%= link_to "避難所情報", shelters_path %></li>
+        <li><%= link_to "災害通知", user_disaster_notifications_path(current_user) %></li>
+        <li><%= link_to "チェックリスト", supplies_path %></li>
+        <li><%= link_to "マニュアル", supplies_path(current_user) %></li>
       <% else %>
-        <li><%= link_to '新規登録', new_user_registration_path %></li>
-        <li><%= link_to 'ログイン', new_user_session_path %></li>
-        <li><%= link_to '避難所情報', '#' %></li>
-        <li><%= link_to 'マニュアル', '#' %></li>
+        <li><%= link_to "新規登録", new_user_registration_path %></li>
+        <li><%= link_to "ログイン", new_user_session_path %></li>
+        <li><%= link_to "避難所情報", shelters_path %></li> <!-- ログインしていないユーザーも表示 -->
+        <li><%= link_to "マニュアル", supplies_path %></li> <!-- 修正: suppliesへのリンク -->
       <% end %>
     </ul>
   </nav>
