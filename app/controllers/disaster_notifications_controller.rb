@@ -1,0 +1,2 @@
+class DisasterNotificationsController < ApplicationController
+end
