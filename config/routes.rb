@@ -5,9 +5,10 @@ Rails.application.routes.draw do
     resources :friendships
     resources :posts
     resources :disaster_notifications
-    resources :shelters
-    resources :supplies
   end
+
+  resources :shelters
+  resources :supplies
 
   root "users#index"
 end

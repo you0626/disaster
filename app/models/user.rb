@@ -1,5 +1,5 @@
 class User < ApplicationRecord
-  # Devise モジュール
+  before_create :set_last_login_at
   devise :database_authenticatable, :registerable,
          :recoverable, :rememberable, :validatable
 
@@ -9,4 +9,13 @@ class User < ApplicationRecord
   has_many :disaster_notifications
   has_many :shelters
   has_many :supplies
+
+  
+  def set_last_login_at
+    self.last_login_at = Time.current
+  end
+
+  def update_last_login_at
+    update(last_login_at: Time.current)
+  end
 end

@@ -6,50 +6,135 @@ body {
 }
 
 header {
-  background-color: #ff5722;
-  color: white;
-  padding: 15px;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
+  background-color: #ff5722; /* ヘッダーの背景色 */
+  color: white; /* ヘッダーの文字色 */
+  padding: 15px; /* ヘッダーの内側の余白 */
+  display: flex; /* フレックスボックスを使用 */
+  justify-content: space-between; /* 左右にスペースを均等に配置 */
+  align-items: center; /* 縦方向の中央揃え */
+}
+
+.logo {
+  font-size: 24px; /* ロゴのフォントサイズ */
 }
 
 nav ul {
-  list-style: none;
-  padding: 0;
+  list-style: none; /* リストのスタイルを無効化 */
+  padding: 0; /* パディングを0に */
+  display: flex; /* フレックスボックスを使用して横並びに */
 }
 
 nav ul li {
-  display: inline;
-  margin: 0 10px;
+  margin: 0 10px; /* 左右に余白 */
 }
 
 nav a {
-  color: white;
-  text-decoration: none;
+  color: white; /* リンクの文字色 */
+  text-decoration: none; /* リンクの下線を削除 */
 }
 
 h2 {
-  border-bottom: 2px solid #ff5722;
-  padding-bottom: 10px;
+  border-bottom: 2px solid #ff5722; /* 下にボーダーを追加 */
+  padding-bottom: 10px; /* 下に余白 */
+  text-align: center; /* センター揃え */
 }
 
 .alert {
-  background-color: #ffccbc;
-  padding: 10px;
-  font-weight: bold;
+  background-color: #ffccbc; /* 警告メッセージの背景色 */
+  padding: 10px; /* 内側の余白 */
+  font-weight: bold; /* 太字 */
 }
 
 section {
-  margin: 20px 0;
-  padding: 20px;
-  background-color: white;
-  border-radius: 5px;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  margin: 20px 0; /* 上下に余白 */
+  padding: 20px; /* 内側の余白 */
+  background-color: white; /* 背景色 */
+  border-radius: 5px; /* 角を丸く */
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* 影を追加 */
 }
 
 footer {
-  text-align: center;
-  padding: 10px;
-  background-color: #eee;
+  text-align: center; /* 中央揃え */
+  padding: 10px; /* 内側の余白 */
+  background-color: #eee; /* 背景色 */
+}
+
+/* フォーム全体のスタイリング */
+form {
+  max-width: 400px; /* 最大幅 */
+  margin: 20px auto; /* 中央揃え */
+  padding: 20px; /* 内側の余白 */
+  border: 1px solid #ccc; /* 枠線 */
+  border-radius: 5px; /* 角を丸く */
+  background-color: #f9f9f9; /* 背景色 */
+}
+
+/* 各フォーム要素のスタイリング */
+div {
+  margin-bottom: 15px; /* 下の余白 */
+}
+
+/* ラベルのスタイリング */
+label {
+  font-weight: bold; /* 太字 */
+  display: block; /* ブロック要素として表示 */
+}
+
+/* 入力フィールドのスタイリング */
+input[type="email"],
+input[type="password"],
+input[type="text"] {
+  width: 100%; /* 幅を100%に */
+  padding: 8px; /* 内側の余白 */
+  border: 1px solid #ccc; /* 枠線 */
+  border-radius: 4px; /* 角を丸く */
+  box-sizing: border-box; /* ボックスサイズ調整 */
+}
+
+/* チェックボックスのスタイリング */
+input[type="checkbox"] {
+  margin-right: 5px; /* 右側に余白 */
+}
+
+/* ボタンのスタイリング */
+input[type="submit"] {
+  background-color: #4CAF50; /* 背景色 */
+  color: white; /* 文字色 */
+  padding: 12px 20px; /* 内側の余白を大きく */
+  font-size: 16px; /* フォントサイズ */
+  border: none; /* 枠線なし */
+  border-radius: 5px; /* 角を丸く */
+  cursor: pointer; /* ポインタに */
+  transition: background-color 0.3s; /* ホバー時の色変更 */
+  text-align: center; /* 中央揃え */
+  margin: 20px auto; /* 上に余白を追加し、左右を自動にして中央揃え */
+  display: block; /* ブロック要素として表示 */
+}
+
+/* ボタンのホバー時のスタイル */
+input[type="submit"]:hover {
+  background-color: #45a049; /* ホバー時の色 */
+}
+
+/* リンクのスタイリング */
+a {
+  color: #007BFF; /* リンクの色 */
+  text-decoration: none; /* 下線を削除 */
+  display: block; /* ブロック要素として表示 */
+  text-align: center; /* 中央揃え */
+  margin: 10px 0; /* 上下に余白を追加 */
+}
+
+a:hover {
+  text-decoration: underline; /* ホバー時に下線を追加 */
+}
+
+/* ユーザー名 */
+.welcome-message {
+  text-align: center; /* テキストを中央揃え */
+  font-size: 20px; /* フォントサイズを大きく */
+  font-weight: bold; /* 太字にする */
+  margin: 10px 0; /* 上下のマージンを追加 */
+  color: blue;
+  text-decoration: underline;
 }
