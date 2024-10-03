@@ -1,29 +1,24 @@
-<h1>インポート結果</h1>
+<!-- app/views/shelters/import.html.erb -->
+<h1>CSVファイルをインポートする</h1>
+<input type="file" id="csvFile" accept=".csv" />
+<button id="loadCsv">CSVを読み込む</button>
 
-<% if @imported_shelters.present? %>
-  <p><%= @imported_shelters.count %> 件の避難所がインポートされました。</p>
-  <table>
-    <thead>
-      <tr>
-        <th>市区町村コード</th>
-        <th>施設名</th>
-        <th>住所</th>
-        <th>緯度</th>
-        <th>経度</th>
-      </tr>
-    </thead>
-    <tbody>
-      <% @imported_shelters.each do |shelter| %>
-        <tr>
-          <td><%= shelter[:municipality_code] %></td>
-          <td><%= shelter[:facility_name] %></td>
-          <td><%= shelter[:address] %></td>
-          <td><%= shelter[:latitude] %></td>
-          <td><%= shelter[:longitude] %></td>
-        </tr>
-      <% end %>
-    </tbody>
-  </table>
-<% else %>
-  <p>インポートされたデータはありません。</p>
-<% end %>
+<script>
+    document.getElementById('loadCsv').addEventListener('click', function() {
+        const fileInput = document.getElementById('csvFile');
+        const file = fileInput.files[0];
+
+        if (file) {
+            const reader = new FileReader();
+            reader.onload = function(event) {
+                const csvData = event.target.result;
+                // CSVデータを localStorage に保存
+                localStorage.setItem('sheltersData', csvData);
+                console.log('CSVデータが localStorage に保存されました');
+            };
+            reader.readAsText(file);
+        } else {
+            console.log('ファイルが選択されていません');
+        }
+    });
+</script>

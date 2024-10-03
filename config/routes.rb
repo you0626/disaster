@@ -13,9 +13,10 @@ Rails.application.routes.draw do
 
   resources :shelters do
     collection do
-      post :import
+      get :download # ここをpostからgetに変更
     end
   end
+
   resources :supplies
 
   root "users#index"

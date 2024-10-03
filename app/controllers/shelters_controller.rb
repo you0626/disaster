@@ -8,7 +8,6 @@ class SheltersController < ApplicationController
   end
 
   def show
-    @shelter = current_user.shelters.find(params[:id])
   end
 
   def new
@@ -43,29 +42,12 @@ class SheltersController < ApplicationController
     redirect_to shelters_path, notice: '避難所が削除されました。'
   end
 
-  def import
-    file_path = Rails.root.join('lib', 'assets', 'shelters.csv')
+  def download
+    # CSVファイルのパスを指定
+    csv_file_path = Rails.root.join('lib', 'assets', 'shelters.csv')
   
-    begin
-      shelters = []
-      CSV.foreach(file_path, headers: true, encoding: 'UTF-8') do |row|
-        Rails.logger.info "Importing row: #{row.inspect}" # デバッグ用
-        shelter = {
-          municipality_code: row['市町村コード'],
-          facility_name: row['施設・場所名'],
-          address: row['住所'],
-          latitude: row['緯度'],
-          longitude: row['経度']
-        }
-  
-        shelters << shelter
-      end
-  
-      Rails.logger.info "Imported shelters: #{shelters.inspect}" # デバッグ用
-      render :import # インポートビューを表示
-    rescue CSV::InvalidEncodingError => e
-      redirect_to shelters_path, alert: "CSVファイルのエンコーディングに問題があります: #{e.message}"
-    end
+    # CSVファイルを送信
+    send_file csv_file_path, type: 'text/csv', disposition: 'attachment'
   end
 
   private
