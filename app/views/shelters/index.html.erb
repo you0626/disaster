@@ -11,12 +11,13 @@
   <tbody>
     <% @shelters.each do |shelter| %>
       <tr>
-        <td><%= shelter.facility_name %></td>  <!-- name を facility_name に変更 -->
-        <td><%= shelter.address %></td>         <!-- location を address に変更 -->
+        <td><%= shelter.facility_name %></td>
+        <td><%= shelter.address %></td>
         <td><%= shelter.latitude %></td>
         <td><%= shelter.longitude %></td>
       </tr>
     <% end %>
   </tbody>
 </table>
+
 <%= button_to 'CSVからインポート', import_shelters_path, method: :post %>

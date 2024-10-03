@@ -1,0 +1,29 @@
+<h1>インポート結果</h1>
+
+<% if @imported_shelters.present? %>
+  <p><%= @imported_shelters.count %> 件の避難所がインポートされました。</p>
+  <table>
+    <thead>
+      <tr>
+        <th>市区町村コード</th>
+        <th>施設名</th>
+        <th>住所</th>
+        <th>緯度</th>
+        <th>経度</th>
+      </tr>
+    </thead>
+    <tbody>
+      <% @imported_shelters.each do |shelter| %>
+        <tr>
+          <td><%= shelter[:municipality_code] %></td>
+          <td><%= shelter[:facility_name] %></td>
+          <td><%= shelter[:address] %></td>
+          <td><%= shelter[:latitude] %></td>
+          <td><%= shelter[:longitude] %></td>
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
+<% else %>
+  <p>インポートされたデータはありません。</p>
+<% end %>

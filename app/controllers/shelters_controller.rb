@@ -44,32 +44,33 @@ class SheltersController < ApplicationController
   end
 
   def import
-    CSV.foreach(Rails.root.join('lib', 'assets', 'shelters.csv'), headers: true) do |row|
-      municipality_code = row['municipality_code']&.strip
-      facility_name = row['facility_name']&.strip
-      address = row['address']&.strip
-      latitude = row['latitude']&.to_f
-      longitude = row['longitude']&.to_f
+    file_path = Rails.root.join('lib', 'assets', 'shelters.csv')
   
-      if municipality_code.nil? || facility_name.nil? || address.nil? || latitude.nil? || longitude.nil?
-        puts "Skipping row due to missing data: #{row.inspect}"
-        next
+    begin
+      shelters = []
+      CSV.foreach(file_path, headers: true, encoding: 'UTF-8') do |row|
+        Rails.logger.info "Importing row: #{row.inspect}" # デバッグ用
+        shelter = {
+          municipality_code: row['市町村コード'],
+          facility_name: row['施設・場所名'],
+          address: row['住所'],
+          latitude: row['緯度'],
+          longitude: row['経度']
+        }
+  
+        shelters << shelter
       end
   
-      Shelter.create!(
-        municipality_code: municipality_code,
-        name: facility_name,
-        location: address,
-        latitude: latitude,
-        longitude: longitude
-      )
+      Rails.logger.info "Imported shelters: #{shelters.inspect}" # デバッグ用
+      render :import # インポートビューを表示
+    rescue CSV::InvalidEncodingError => e
+      redirect_to shelters_path, alert: "CSVファイルのエンコーディングに問題があります: #{e.message}"
     end
-    redirect_to shelters_path, notice: '避難所データをインポートしました。'
   end
 
   private
 
-  def shelter_params
-    params.require(:shelter).permit(:name, :location, :capacity, :description)
-  end
+def shelter_params
+  params.require(:shelter).permit(:municipality_code, :facility_name, :address, :latitude, :longitude)
+end
 end
