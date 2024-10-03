@@ -1,0 +1,22 @@
+<h1>避難所一覧</h1>
+<table>
+  <thead>
+    <tr>
+      <th>施設名</th>
+      <th>住所</th>
+      <th>緯度</th>
+      <th>経度</th>
+    </tr>
+  </thead>
+  <tbody>
+    <% @shelters.each do |shelter| %>
+      <tr>
+        <td><%= shelter.facility_name %></td>  <!-- name を facility_name に変更 -->
+        <td><%= shelter.address %></td>         <!-- location を address に変更 -->
+        <td><%= shelter.latitude %></td>
+        <td><%= shelter.longitude %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+<%= button_to 'CSVからインポート', import_shelters_path, method: :post %>

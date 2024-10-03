@@ -11,7 +11,11 @@ Rails.application.routes.draw do
     post 'update_location', on: :collection
   end
 
-  resources :shelters
+  resources :shelters do
+    collection do
+      post :import
+    end
+  end
   resources :supplies
 
   root "users#index"

@@ -6,7 +6,7 @@ class User < ApplicationRecord
   has_many :friends, through: :friendships
   has_many :posts
   has_many :disaster_notifications
-  has_many :shelters
+  has_many :shelters, class_name: 'Shelter'
   has_many :supplies
 
   geocoded_by :current_sign_in_ip do |obj, results|
