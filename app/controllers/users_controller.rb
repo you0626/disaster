@@ -4,6 +4,11 @@ class UsersController < ApplicationController
 
   def index
     @users = User.all
+    if current_user && current_user.latitude && current_user.longitude
+      @nearby_notifications = DisasterNotification.near([current_user.latitude, current_user.longitude], 50) # 半径50km以内の通知
+    else
+      @nearby_notifications = DisasterNotification.none
+    end
   end
 
   def show
@@ -40,6 +45,14 @@ class UsersController < ApplicationController
     @user = User.find(params[:id])
     @user.destroy
     redirect_to users_path, notice: 'ユーザーが削除されました。'
+  end
+
+  def update_location
+    if current_user.update(latitude: params[:latitude], longitude: params[:longitude])
+      render json: { success: true }
+    else
+      render json: { success: false }, status: :unprocessable_entity
+    end
   end
 
   private

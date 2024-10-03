@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2024_10_02_084948) do
+ActiveRecord::Schema[7.0].define(version: 2024_10_03_012438) do
   create_table "active_storage_attachments", charset: "utf8mb3", force: :cascade do |t|
     t.string "name", null: false
     t.string "record_type", null: false
@@ -44,6 +44,9 @@ ActiveRecord::Schema[7.0].define(version: 2024_10_02_084948) do
     t.bigint "user_id", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.float "latitude"
+    t.float "longitude"
+    t.string "category"
     t.index ["user_id"], name: "index_disaster_notifications_on_user_id"
   end
 
@@ -94,6 +97,13 @@ ActiveRecord::Schema[7.0].define(version: 2024_10_02_084948) do
     t.datetime "remember_created_at"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.integer "sign_in_count", default: 0, null: false
+    t.datetime "current_sign_in_at"
+    t.datetime "last_sign_in_at"
+    t.string "current_sign_in_ip"
+    t.string "last_sign_in_ip"
+    t.float "latitude"
+    t.float "longitude"
     t.index ["email"], name: "index_users_on_email", unique: true
     t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
   end
