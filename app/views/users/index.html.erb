@@ -1,10 +1,50 @@
-<!-- app/views/home/index.html.erb -->
 <main>
   <section class="emergency-notification">
-    <h2>緊急通知</h2>
-    <p class="alert">注意！大雨警報が発令されています。</p>
+    <script>
+      document.addEventListener("DOMContentLoaded", function() {
+        if (navigator.geolocation) {
+          navigator.geolocation.getCurrentPosition(function(position) {
+            fetch('/users/update_location', {
+              method: 'POST',
+              headers: {
+                'Content-Type': 'application/json',
+                'X-CSRF-Token': '<%= form_authenticity_token %>'
+              },
+              body: JSON.stringify({
+                latitude: position.coords.latitude,
+                longitude: position.coords.longitude
+              })
+            });
+          });
+        } else {
+          alert("現在位置情報を取得できませんでした。");
+        }
+      });
+    </script>
+    
+    <!-- 常にタイトルを表示 -->
+    <section class="disaster-notifications">
+      <h2>周辺エリアの災害通知</h2>
+
+      <!-- 通知がある場合にリストを表示、なければメッセージを表示 -->
+      <% if @nearby_notifications.present? %>
+        <ul>
+          <% @nearby_notifications.each do |notification| %>
+            <li>
+              <strong>災害名:</strong> <%= notification.title %><br>
+              <strong>発生日時:</strong> <%= notification.occurred_at.strftime("%Y年%m月%d日 %H:%M") %><br>
+              <strong>詳細:</strong> <%= notification.details %><br>
+              <strong>場所:</strong> <%= notification.location %>
+            </li>
+          <% end %>
+        </ul>
+      <% else %>
+        <p>周辺エリアに災害通知はありません。</p>
+      <% end %>
+    </section>
   </section>
 
+  <!-- 以下は元のコードのまま -->
   <section class="search-shelter">
     <h2>避難所検索</h2>
     <%= form_with url: '#', method: :get, local: true do %>

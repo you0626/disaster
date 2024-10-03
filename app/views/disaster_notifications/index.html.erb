@@ -1,0 +1,17 @@
+<% if @national_notifications.present? %>
+  <section class="national-disaster-notifications">
+    <h2>全国の災害通知</h2>
+    <ul>
+      <% @national_notifications.each do |notification| %>
+        <li>
+          <strong>災害名:</strong> <%= notification.title %><br>
+          <strong>発生日時:</strong> <%= notification.occurred_at.strftime("%Y年%m月%d日 %H:%M") %><br>
+          <strong>詳細:</strong> <%= notification.details %><br>
+          <strong>場所:</strong> <%= notification.location %>
+        </li>
+      <% end %>
+    </ul>
+  </section>
+<% else %>
+  <p>現在、全国で報告された災害通知はありません。</p>
+<% end %>

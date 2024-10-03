@@ -8,6 +8,7 @@ Rails.application.routes.draw do
     resources :friendships
     resources :posts
     resources :disaster_notifications
+    post 'update_location', on: :collection
   end
 
   resources :shelters
