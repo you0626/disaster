@@ -147,3 +147,8 @@ a:hover {
   color: blue;
   text-decoration: underline;
 }
+
+
+.supply-item {
+  font-size: 5px !important; /* 重要なスタイルとして適用 */
+}

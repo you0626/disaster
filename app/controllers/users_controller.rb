@@ -4,8 +4,15 @@ class UsersController < ApplicationController
 
   def index
     @users = User.all
-    if current_user && current_user.latitude && current_user.longitude
-      @nearby_notifications = DisasterNotification.near([current_user.latitude, current_user.longitude], 50) # 半径50km以内の通知
+    if user_signed_in?
+      @necessary_supplies = current_user.supplies.where(category: 'necessary').order(:name) # 必要な物
+      @stock_supplies = current_user.supplies.where(category: 'stock').order(:expiration_date) # 備蓄品
+      
+      if current_user.latitude && current_user.longitude
+        @nearby_notifications = DisasterNotification.near([current_user.latitude, current_user.longitude], 50) # 半径50km以内の通知
+      else
+        @nearby_notifications = DisasterNotification.none
+      end
     else
       @nearby_notifications = DisasterNotification.none
     end
