@@ -1,12 +1,13 @@
+require 'csv'
+
 class SheltersController < ApplicationController
   before_action :authenticate_user!
 
   def index
-    @shelters = current_user.shelters
+    @shelters = current_user.shelters # 現在のユーザーの避難所を取得
   end
 
   def show
-    @shelter = current_user.shelters.find(params[:id])
   end
 
   def new
@@ -41,9 +42,17 @@ class SheltersController < ApplicationController
     redirect_to shelters_path, notice: '避難所が削除されました。'
   end
 
+  def download
+    # CSVファイルのパスを指定
+    csv_file_path = Rails.root.join('lib', 'assets', 'shelters.csv')
+  
+    # CSVファイルを送信
+    send_file csv_file_path, type: 'text/csv', disposition: 'attachment'
+  end
+
   private
 
-  def shelter_params
-    params.require(:shelter).permit(:name, :location, :capacity, :description)
-  end
+def shelter_params
+  params.require(:shelter).permit(:municipality_code, :facility_name, :address, :latitude, :longitude)
+end
 end

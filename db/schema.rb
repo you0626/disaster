@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2024_10_03_012438) do
+ActiveRecord::Schema[7.0].define(version: 2024_10_03_033435) do
   create_table "active_storage_attachments", charset: "utf8mb3", force: :cascade do |t|
     t.string "name", null: false
     t.string "record_type", null: false
@@ -68,12 +68,14 @@ ActiveRecord::Schema[7.0].define(version: 2024_10_03_012438) do
   end
 
   create_table "shelters", charset: "utf8mb3", force: :cascade do |t|
-    t.string "name"
-    t.text "location"
-    t.text "description"
+    t.string "facility_name"
     t.bigint "user_id", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.string "municipality_code"
+    t.string "address"
+    t.float "latitude"
+    t.float "longitude"
     t.index ["user_id"], name: "index_shelters_on_user_id"
   end
 

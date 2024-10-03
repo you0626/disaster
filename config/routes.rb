@@ -11,7 +11,12 @@ Rails.application.routes.draw do
     post 'update_location', on: :collection
   end
 
-  resources :shelters
+  resources :shelters do
+    collection do
+      get :download # ここをpostからgetに変更
+    end
+  end
+
   resources :supplies
 
   root "users#index"
