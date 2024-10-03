@@ -1,0 +1,53 @@
+<h1>必要な物リスト</h1>
+<%= form_with model: @new_required_item, url: supplies_path, local: true do |f| %>
+  <div>
+    <%= f.label :name, "必要な物の名前" %>
+    <%= f.text_field :name %>
+  </div>
+  <div>
+    <%= f.label :quantity, "数量" %>
+    <%= f.number_field :quantity %>
+  </div>
+  <%= f.hidden_field :type, value: 'required_item' %>
+  <%= f.submit "追加" %>
+<% end %>
+
+<ul>
+  <% @necessary_supplies.each do |supply| %>
+    <li class="supply-item">
+      <div style="display: flex; align-items: center;">
+        <span><%= supply.name %> - <%= supply.quantity %></span>
+        <%= button_to '削除', supply_path(supply), method: :delete, data: { confirm: '本当に削除しますか？' }, class: 'btn-delete' %>
+      </div>
+    </li>
+  <% end %>
+</ul>
+
+<h1>備蓄品リスト</h1>
+<%= form_with model: @new_supply, url: supplies_path, local: true do |f| %>
+  <div>
+    <%= f.label :name, "備蓄品の名前" %>
+    <%= f.text_field :name %>
+  </div>
+  <div>
+    <%= f.label :quantity, "数量" %>
+    <%= f.number_field :quantity %>
+  </div>
+  <div>
+    <%= f.label :expiration_date, "期限" %>
+    <%= f.date_field :expiration_date %>
+  </div>
+  <%= f.hidden_field :type, value: 'stock' %>
+  <%= f.submit "追加" %>
+<% end %>
+
+<ul>
+  <% @stock_supplies.each do |supply| %>
+    <li class="supply-item">
+      <div style="display: flex; align-items: center;">
+        <span><%= supply.name %> - <%= supply.quantity %> (期限: <%= supply.expiration_date || 'なし' %>)</span>
+        <%= button_to '削除', supply_path(supply), method: :delete, data: { confirm: '本当に削除しますか？' }, class: 'btn-delete' %>
+      </div>
+    </li>
+  <% end %>
+</ul>

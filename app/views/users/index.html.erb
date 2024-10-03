@@ -53,21 +53,39 @@
     <% end %>
   </section>
 
+  <h1>物資管理</h1>
+
   <% if user_signed_in? %>
+    <!-- 必要な物のチェックリスト -->
     <section class="checklist">
       <h2>必要な物のチェックリスト</h2>
       <ul>
-        <li><%= check_box_tag 'water' %> 水</li>
-        <li><%= check_box_tag 'food' %> 食料</li>
-        <li><%= check_box_tag 'medical' %> 医療品</li>
+        <% if @necessary_supplies.present? %>
+          <% @necessary_supplies.each do |item| %>
+            <li>
+              <%= check_box_tag "supply[type]", 'required_item', false, id: "supply_#{item.id}" %>
+              <%= item.name %>
+            </li>
+          <% end %>
+        <% else %>
+          <p>必要な物がありません。</p>
+        <% end %>
       </ul>
     </section>
 
+    <!-- 備蓄品のリマインダー -->
     <section class="reminders">
       <h2>備蓄品のリマインダー</h2>
       <ul>
-        <li>水 (賞味期限: 2024年1月1日)</li>
-        <li>非常食 (賞味期限: 2023年12月31日)</li>
+        <% if @stock_supplies.present? %>
+          <% @stock_supplies.each do |supply| %>
+            <li>
+              <%= supply.name %> (賞味期限: <%= supply.expiration_date.strftime("%Y年%m月%d日") if supply.expiration_date %>)
+            </li>
+          <% end %>
+        <% else %>
+          <p>備蓄品がありません。</p>
+        <% end %>
       </ul>
     </section>
 
