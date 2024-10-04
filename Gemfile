@@ -93,3 +93,5 @@ gem 'httparty'
 gem 'geocoder'
 
 gem 'rspec-rails'
+
+gem 'bootstrap', '~> 5.1.3'  # バージョンは適宜調整
