@@ -10,12 +10,32 @@
         <li><%= link_to "避難所情報", shelters_path %></li>
         <li><%= link_to "災害通知", user_disaster_notifications_path(current_user) %></li>
         <li><%= link_to "チェックリスト", supplies_path %></li>
-        <li><%= link_to "マニュアル", supplies_path(current_user) %></li>
+        <ul class="nav" data-controller="dropdown">
+          <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" data-action="click->dropdown#toggleMenu" href="#" role="button" aria-haspopup="true" aria-expanded="false">
+              マニュアル
+            </a>
+            <ul data-target="dropdown.menu" class="dropdown-menu">
+              <li><a class="dropdown-item" href="<%= earthquake_manual_index_path %>">地震マニュアル</a></li>
+              <li><a class="dropdown-item" href="<%= typhoon_manual_index_path %>">台風マニュアル</a></li>
+            </ul>
+          </li>
+        </ul>
       <% else %>
         <li><%= link_to "新規登録", new_user_registration_path %></li>
         <li><%= link_to "ログイン", new_user_session_path %></li>
-        <li><%= link_to "避難所情報", shelters_path %></li> <!-- ログインしていないユーザーも表示 -->
-        <li><%= link_to "マニュアル", supplies_path %></li> <!-- 修正: suppliesへのリンク -->
+        <li><%= link_to "避難所情報", shelters_path %></li>
+        <ul class="nav" data-controller="dropdown">
+          <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" data-action="click->dropdown#toggleMenu" href="#" role="button" aria-haspopup="true" aria-expanded="false">
+              マニュアル
+            </a>
+            <ul data-target="dropdown.menu" class="dropdown-menu">
+              <li><a class="dropdown-item" href="<%= earthquake_manual_index_path %>">地震マニュアル</a></li>
+              <li><a class="dropdown-item" href="<%= typhoon_manual_index_path %>">台風マニュアル</a></li>
+            </ul>
+          </li>
+        </ul>
       <% end %>
     </ul>
   </nav>
