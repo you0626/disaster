@@ -15,15 +15,36 @@ document.addEventListener('DOMContentLoaded', function() {
       const shelters = parseCSV(data);
       console.log('Response data:', data); // 読み込んだデータをコンソールに表示
       console.log(shelters); // 読み込んだデータをコンソールに表示
-      // ここでGPS機能の実装などを行う
+
+      // ここでGPS機能の実装
+      if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition(function(position) {
+          const userLat = position.coords.latitude;
+          const userLon = position.coords.longitude;
+
+          // 距離を計算してソート
+          const sortedShelters = shelters.map(shelter => {
+            const distance = haversineDistance(userLat, userLon, shelter.latitude, shelter.longitude);
+            return { ...shelter, distance };
+          }).sort((a, b) => a.distance - b.distance);
+
+          // 近くの避難所を表示
+          displayNearbyShelters(sortedShelters);
+        }, function(error) {
+          console.error('Error getting location:', error);
+        });
+      } else {
+        alert('Geolocation is not supported by this browser.');
+      }
     })
     .catch(error => {
       console.error('There was a problem with the fetch operation:', error);
     });
 
+  // CSVを解析する関数
   function parseCSV(data) {
     const rows = data.trim().split('\n');
-    const shelters = rows.slice(1).map(row => {
+    return rows.slice(1).map(row => {
       const columns = row.split(',');
       return {
         municipality_code: columns[0].trim(),
@@ -33,7 +54,33 @@ document.addEventListener('DOMContentLoaded', function() {
         longitude: parseFloat(columns[4]) // 経度を数値に変換
       };
     });
-    return shelters;
+  }
+
+  // ハーバシン距離計算の関数
+  function haversineDistance(lat1, lon1, lat2, lon2) {
+    const R = 6371; // 地球の半径（キロメートル）
+    const dLat = (lat2 - lat1) * Math.PI / 180;
+    const dLon = (lon2 - lon1) * Math.PI / 180;
+    const a = Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+              Math.cos(lat1 * Math.PI / 180) * Math.cos(lat2 * Math.PI / 180) *
+              Math.sin(dLon / 2) * Math.sin(dLon / 2);
+    const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+    return R * c; // 距離を返す
+  }
+
+  // 近くの避難所を表示する関数
+  function displayNearbyShelters(shelters) {
+    const nearbyShelters = shelters.slice(0, 3); // 3件表示
+    const shelterList = document.createElement('ul');
+
+    nearbyShelters.forEach(shelter => {
+      const shelterItem = document.createElement('li');
+      shelterItem.textContent = `${shelter.facility_name} - ${shelter.address} (${shelter.distance.toFixed(2)} km)`;
+      shelterList.appendChild(shelterItem);
+    });
+
+    // 結果を表示する場所を作成
+    document.body.appendChild(shelterList); // 必要に応じて適切な場所に表示
   }
 });
 </script>

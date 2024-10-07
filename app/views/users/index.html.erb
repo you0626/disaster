@@ -2,6 +2,7 @@
   <section class="emergency-notification">
     <script>
       document.addEventListener("DOMContentLoaded", function() {
+        // 位置情報を取得し、サーバーに送信する
         if (navigator.geolocation) {
           navigator.geolocation.getCurrentPosition(function(position) {
             fetch('/users/update_location', {
@@ -22,11 +23,10 @@
       });
     </script>
     
-    <!-- 常にタイトルを表示 -->
+    <!-- 災害通知の表示 -->
     <section class="disaster-notifications">
       <h2>周辺エリアの災害通知</h2>
 
-      <!-- 通知がある場合にリストを表示、なければメッセージを表示 -->
       <% if @nearby_notifications.present? %>
         <ul>
           <% @nearby_notifications.each do |notification| %>
@@ -44,7 +44,7 @@
     </section>
   </section>
 
-  <!-- 以下は元のコードのまま -->
+  <!-- 避難所検索 -->
   <section class="search-shelter">
     <h2>避難所検索</h2>
     <%= form_with url: '#', method: :get, local: true do %>
@@ -53,6 +53,7 @@
     <% end %>
   </section>
 
+  <!-- 物資管理 -->
   <h1>物資管理</h1>
 
   <% if user_signed_in? %>
@@ -89,12 +90,14 @@
       </ul>
     </section>
 
+    <!-- ユーザーの最近のアクティビティ -->
     <section class="user-activity">
       <h2>最近のアクティビティ</h2>
       <p>最後のログイン: <%= current_user.last_login_at.strftime("%Y年%m月%d日 %H:%M") if current_user.last_login_at %></p>
     </section>
   <% end %>
 
+  <!-- 災害マニュアル -->
   <section class="manual">
     <h2>災害マニュアル</h2>
     <%= link_to '地震マニュアル', earthquake_manual_index_path %><br>
