@@ -7,8 +7,8 @@
   <%= csrf_meta_tags %>
   <%= csp_meta_tag %>
 
-  <%= stylesheet_link_tag "application", "data-turbo-track": "reload" %> <!-- styles.cssをインポート -->
-  <%= javascript_include_tag "application", "data-turbo-track": "reload" %>
+  <%= stylesheet_link_tag "style", "data-turbo-track": "reload" %> <!-- styles.cssをインポート -->
+  <%= javascript_include_tag "packs/application", "data-turbo-track": "reload" %>
   <script type="text/javascript" src="https://js.pay.jp/v2/pay.js"></script>
   <%= javascript_include_tag 'shelter_data', 'data-turbo-track': 'reload' %>
 </head>

@@ -144,7 +144,7 @@ a:hover {
   font-size: 20px; /* フォントサイズを大きく */
   font-weight: bold; /* 太字にする */
   margin: 10px 0; /* 上下のマージンを追加 */
-  color: blue;
+  color: skyblue;
   text-decoration: underline;
 }
 
