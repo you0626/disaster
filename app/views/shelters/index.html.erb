@@ -8,34 +8,31 @@
 
 <%# スクリプトを追加 %>
 <script>
+  <script>
   document.addEventListener('DOMContentLoaded', function () {
-    // CSVファイルのパスを指定
-    fetch('<%= asset_path('shelters.csv') %>') 
-      .then(response => response.text())
+    // shelter.csvの正しいパスをRuby側で取得してJavaScriptに渡す
+    const csvFilePath = "<%= asset_path('shelters.csv') %>";
+    console.log('CSV file path:', csvFilePath);
+
+    fetch(csvFilePath)
+      .then(response => {
+        if (!response.ok) {
+          throw new Error('Network response was not ok');
+        }
+        return response.text();
+      })
       .then(data => {
-        const shelters = parseCSV(data); // CSVを解析する関数を呼び出す
-        
-        // 近くの避難所表示ボタンのクリックイベントを設定
-        document.getElementById('show-nearby-shelters').addEventListener('click', () => {
-          navigator.geolocation.getCurrentPosition(position => {
-            const userLat = position.coords.latitude;
-            const userLng = position.coords.longitude;
+        const shelters = parseCSV(data);
+        console.log('Parsed shelters:', shelters);
 
-            // 10km以内の避難所をフィルタリング
-            const nearbyShelters = shelters.filter(shelter => {
-              const shelterLat = parseFloat(shelter.latitude);
-              const shelterLng = parseFloat(shelter.longitude);
-              const distance = haversineDistance(userLat, userLng, shelterLat, shelterLng);
-              return distance <= 10; // 10km以内の避難所のみ
-            });
-
-            // フィルタされた避難所を表示
-            displayShelters(nearbyShelters);
-          });
-        });
+        // Geolocation APIなどの処理を続ける
+      })
+      .catch(error => {
+        console.error('There was a problem with the fetch operation:', error);
       });
   });
 
+  function parseCSV(data) {
   // CSVを解析する関数
   function parseCSV(data) {
     const lines = data.split('\n');
@@ -76,4 +73,5 @@
     const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
     return R * c; // 距離を返す
   }
+ }
 </script>

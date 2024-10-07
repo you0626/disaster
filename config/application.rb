@@ -13,8 +13,8 @@ module Disaster
     config.active_job.queue_adapter = :sidekiq
     config.time_zone = 'Tokyo' # または適切なタイムゾーンを設定
     config.active_record.default_timezone = :local # データベースのタイムゾーンをローカルに設定
-    config.assets.paths << Rails.root.join("lib", "assets")
-
+    config.assets.paths << Rails.root.join('lib', 'assets')
+    
     # Configuration for the application, engines, and railties goes here.
     #
     # These settings can be overridden in specific environments using the files
