@@ -8,7 +8,6 @@
 <%# スクリプトを追加 %>
 <script>
   document.addEventListener('DOMContentLoaded', function () {
-    // shelter.csvの正しいパスをRuby側で取得してJavaScriptに渡す
     const csvFilePath = "<%= download_shelters_path %>";
     console.log('CSV file path:', csvFilePath);
 
@@ -23,15 +22,34 @@
         const shelters = parseCSV(data);
         console.log('Parsed shelters:', shelters);
 
-        // Geolocation APIなどの処理を続ける
+        // ボタンがクリックされたときにGPS機能と近くの避難所表示を実行
+        document.getElementById('show-nearby-shelters').addEventListener('click', function () {
+          if (navigator.geolocation) {
+            navigator.geolocation.getCurrentPosition(function(position) {
+              const userLat = position.coords.latitude;
+              const userLon = position.coords.longitude;
+
+              // 避難所との距離を計算してソート
+              const sortedShelters = shelters.map(shelter => {
+                const distance = haversineDistance(userLat, userLon, parseFloat(shelter.latitude), parseFloat(shelter.longitude));
+                return { ...shelter, distance };
+              }).sort((a, b) => a.distance - b.distance);
+
+              // 近くの避難所を表示
+              displayShelters(sortedShelters);
+            }, function(error) {
+              console.error('Error getting location:', error);
+            });
+          } else {
+            alert('Geolocation is not supported by this browser.');
+          }
+        });
       })
       .catch(error => {
         console.error('There was a problem with the fetch operation:', error);
       });
   });
 
-  function parseCSV(data) {
-  // CSVを解析する関数
   function parseCSV(data) {
     const lines = data.split('\n');
     const headers = lines[0].split(',');
@@ -55,7 +73,7 @@
     const nearbyShelters = shelters.slice(0, 3);
     nearbyShelters.forEach(shelter => {
       const shelterItem = document.createElement('div');
-      shelterItem.textContent = `${shelter.facility_name} - ${shelter.address}`;
+      shelterItem.textContent = `${shelter.facility_name} - ${shelter.address} (${shelter.distance.toFixed(2)} km)`;
       shelterList.appendChild(shelterItem);
     });
   }
@@ -71,5 +89,4 @@
     const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
     return R * c; // 距離を返す
   }
- }
 </script>

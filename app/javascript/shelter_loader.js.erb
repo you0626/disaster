@@ -1,7 +1,9 @@
 document.addEventListener('DOMContentLoaded', function() {
-  const csvFilePath = '<%= download_shelters_path %>';
+  const csvFilePath = '<%= download_shelters_path %>'; // ERBを利用してCSVファイルのパスを取得
 
+  // CSVファイルのパスをコンソールに表示
   console.log('CSV file path:', csvFilePath);
+
   fetch(csvFilePath)
     .then(response => {
       if (!response.ok) {
@@ -11,11 +13,30 @@ document.addEventListener('DOMContentLoaded', function() {
     })
     .then(data => {
       const shelters = parseCSV(data);
-      console.log('Response data:', data);
-      console.log(shelters);
+      console.log('Response data:', data); // 読み込んだデータをコンソールに表示
+      console.log('避難所データ:', shelters); // 解析した避難所データを表示
+
+      // ユーザーの現在位置を取得
+      if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition(function(position) {
+          const userLat = position.coords.latitude;
+          const userLon = position.coords.longitude;
+          console.log('ユーザーの現在地:', userLat, userLon);
+
+          // 現在位置から近い避難所を取得
+          const nearestShelters = findNearestShelters(userLat, userLon, shelters);
+          console.log('近くの避難所:', nearestShelters);
+
+          // 必要に応じて、HTMLに近くの避難所を表示する処理を追加
+        }, function(error) {
+          console.error('位置情報取得に失敗しました:', error.message);
+        });
+      } else {
+        console.error('Geolocationはこのブラウザではサポートされていません。');
+      }
     })
     .catch(error => {
-      console.error('There was a problem with the fetch operation:', error);
+      console.error('Fetchエラー:', error);
     });
 
   function parseCSV(data) {
@@ -26,10 +47,35 @@ document.addEventListener('DOMContentLoaded', function() {
         municipality_code: columns[0].trim(),
         facility_name: columns[1].trim(),
         address: columns[2].trim(),
-        latitude: parseFloat(columns[3]),
-        longitude: parseFloat(columns[4])
+        latitude: parseFloat(columns[3]), // 緯度を数値に変換
+        longitude: parseFloat(columns[4]) // 経度を数値に変換
       };
     });
     return shelters;
+  }
+
+  // ユーザーの位置と避難所の位置を比較し、近い避難所を見つける関数
+  function findNearestShelters(userLat, userLon, shelters) {
+    // 距離計算のための関数（Haversine formulaを使用）
+    function calculateDistance(lat1, lon1, lat2, lon2) {
+      const R = 6371; // 地球の半径（km）
+      const dLat = (lat2 - lat1) * Math.PI / 180;
+      const dLon = (lon2 - lon1) * Math.PI / 180;
+      const a = 
+        Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+        Math.cos(lat1 * Math.PI / 180) * Math.cos(lat2 * Math.PI / 180) *
+        Math.sin(dLon / 2) * Math.sin(dLon / 2);
+      const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+      return R * c; // 距離（km）
+    }
+
+    // 避難所ごとの距離を計算し、近い順にソート
+    shelters.forEach(shelter => {
+      shelter.distance = calculateDistance(userLat, userLon, shelter.latitude, shelter.longitude);
+    });
+
+    // 距離が近い順にソートして上位3つを返す
+    shelters.sort((a, b) => a.distance - b.distance);
+    return shelters.slice(0, 3); // 近い避難所を3つ返す
   }
 });
