@@ -4,21 +4,26 @@
   <title>災害用アプリ</title>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
+  
   <%= csrf_meta_tags %>
   <%= csp_meta_tag %>
 
-  <%= stylesheet_link_tag "style", "data-turbo-track": "reload" %> <!-- styles.cssをインポート -->
+  <%= stylesheet_link_tag "style", "data-turbo-track": "reload" %>
+
   <%= javascript_include_tag "packs/application", "data-turbo-track": "reload" %>
-  <script type="text/javascript" src="https://js.pay.jp/v2/pay.js"></script>
   <%= javascript_include_tag 'shelter_data', 'data-turbo-track': 'reload' %>
+
 </head>
 <body>
+  <!-- ヘッダーのレンダリング -->
   <%= render 'layouts/header' %>
 
   <main>
+    <!-- ページ固有のコンテンツ -->
     <%= yield %>
   </main>
 
+  <!-- フッターのレンダリング -->
   <%= render 'layouts/footer' %>
 </body>
 </html>

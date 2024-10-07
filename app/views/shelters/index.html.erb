@@ -1,17 +1,15 @@
 <h1>避難所一覧</h1>
 
-<%= link_to 'Download Shelters CSV', download_shelters_path, class: 'btn btn-primary' %>
-
+<a href="<%= download_shelters_path %>">CSVダウンロード</a>
 <%# ボタンと表示エリアを追加 %>
 <button id="show-nearby-shelters">近くの避難所を表示</button>
 <div id="shelter-list"></div>
 
 <%# スクリプトを追加 %>
 <script>
-  <script>
   document.addEventListener('DOMContentLoaded', function () {
     // shelter.csvの正しいパスをRuby側で取得してJavaScriptに渡す
-    const csvFilePath = "<%= asset_path('shelters.csv') %>";
+    const csvFilePath = "<%= download_shelters_path %>";
     console.log('CSV file path:', csvFilePath);
 
     fetch(csvFilePath)

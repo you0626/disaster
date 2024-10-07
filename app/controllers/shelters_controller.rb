@@ -44,10 +44,10 @@ class SheltersController < ApplicationController
 
   def download
     # CSVファイルのパスを指定
-    csv_file_path = Rails.root.join('lib', 'assets', 'shelters.csv')
+    filepath = Rails.root.join('lib', 'assets', 'shelters.csv')
   
     # CSVファイルを送信
-    send_file csv_file_path, type: 'text/csv', disposition: 'attachment'
+    send_file(filepath, filename: "shelters.csv", type: "text/csv")
   end
 
   private

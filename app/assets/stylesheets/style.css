@@ -164,3 +164,11 @@ a:hover {
 .dropdown-menu.show {
   display: block; /* .show クラスが付与されたときに表示 */
 }
+
+.dropdown-menu {
+  display: none;
+}
+
+.dropdown-menu.show {
+  display: block;
+}
