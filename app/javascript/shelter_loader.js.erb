@@ -1,0 +1,35 @@
+document.addEventListener('DOMContentLoaded', function() {
+  const csvFilePath = '<%= download_shelters_path %>';
+
+  console.log('CSV file path:', csvFilePath);
+  fetch(csvFilePath)
+    .then(response => {
+      if (!response.ok) {
+        throw new Error('Network response was not ok');
+      }
+      return response.text();
+    })
+    .then(data => {
+      const shelters = parseCSV(data);
+      console.log('Response data:', data);
+      console.log(shelters);
+    })
+    .catch(error => {
+      console.error('There was a problem with the fetch operation:', error);
+    });
+
+  function parseCSV(data) {
+    const rows = data.trim().split('\n');
+    const shelters = rows.slice(1).map(row => {
+      const columns = row.split(',');
+      return {
+        municipality_code: columns[0].trim(),
+        facility_name: columns[1].trim(),
+        address: columns[2].trim(),
+        latitude: parseFloat(columns[3]),
+        longitude: parseFloat(columns[4])
+      };
+    });
+    return shelters;
+  }
+});

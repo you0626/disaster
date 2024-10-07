@@ -1,8 +1,9 @@
-// app/javascript/shelter_data.js.erb
+// app/views/some_view/index.html.erb
+<script>
 document.addEventListener('DOMContentLoaded', function() {
-  const csvFilePath = '<%= asset_path(`shelters.csv`) %>'; // ERBを利用してCSVファイルのパスを取得
+  const csvFilePath = '<%= download_shelters_path %>'; // ERBを利用してCSVファイルのパスを取得
 
-  console.log('CSV file path:', csvFilePath); // パスをコンソールに表示
+  console.log('CSV file path:', csvFilePath);
   fetch(csvFilePath)
     .then(response => {
       if (!response.ok) {
@@ -21,17 +22,18 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 
   function parseCSV(data) {
-    const rows = data.split('\n');
+    const rows = data.trim().split('\n');
     const shelters = rows.slice(1).map(row => {
       const columns = row.split(',');
       return {
-        municipality_code: columns[0],
-        facility_name: columns[1],
-        address: columns[2],
-        latitude: columns[3],
-        longitude: columns[4]
+        municipality_code: columns[0].trim(),
+        facility_name: columns[1].trim(),
+        address: columns[2].trim(),
+        latitude: parseFloat(columns[3]), // 緯度を数値に変換
+        longitude: parseFloat(columns[4]) // 経度を数値に変換
       };
     });
     return shelters;
   }
 });
+</script>
