@@ -19,11 +19,9 @@ Rails.application.routes.draw do
     post 'update_location', on: :collection
   end
 
-  resources :shelters do
-    collection do
-      get :download
-    end
-  end
+  resources :shelters, except: [:show]
+
+  get 'shelters/download_shelters', to: 'shelters#download_shelters', as: 'download_shelters'
 
   resources :supplies
 
@@ -33,6 +31,8 @@ Rails.application.routes.draw do
       get 'typhoon'
     end
   end
+
+  post 'shelters/nearby', to: 'shelters#nearby'
 
   root "users#index"
 end

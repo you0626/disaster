@@ -42,17 +42,33 @@ class SheltersController < ApplicationController
     redirect_to shelters_path, notice: '避難所が削除されました。'
   end
 
-  def download
-    # CSVファイルのパスを指定
-    filepath = Rails.root.join('lib', 'assets', 'shelters.csv')
-  
-    # CSVファイルを送信
-    send_file(filepath, filename: "shelters.csv", type: "text/csv")
+  def download_shelters
+    # CSVファイルを返す処理
+    csv_path = Rails.root.join('lib', 'assets', 'shelters.csv')
+    send_file csv_path, type: 'text/csv', filename: 'shelters.csv'
   end
 
+  def nearby
+    latitude = params[:latitude]
+    longitude = params[:longitude]
+
+    if latitude.present? && longitude.present?
+      # Geocoderを使用して、近くの避難所を検索
+      @shelters = Shelter.near([latitude, longitude], 10) # 10km以内
+      
+      render json: { shelters: @shelters.map { |shelter| {
+        name: shelter.name, 
+        address: shelter.address, 
+        distance: shelter.distance_to([latitude, longitude])
+      } } }
+    else
+      render json: { error: '位置情報が提供されていません。' }, status: :unprocessable_entity
+    end
+  end
+  
   private
 
-def shelter_params
+  def shelter_params
   params.require(:shelter).permit(:municipality_code, :facility_name, :address, :latitude, :longitude)
-end
+  end
 end

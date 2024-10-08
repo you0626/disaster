@@ -1,11 +1,9 @@
 <h1>避難所一覧</h1>
 
 <a href="<%= download_shelters_path %>">CSVダウンロード</a>
-<%# ボタンと表示エリアを追加 %>
 <button id="show-nearby-shelters">近くの避難所を表示</button>
 <div id="shelter-list"></div>
 
-<%# スクリプトを追加 %>
 <script>
   document.addEventListener('DOMContentLoaded', function () {
     const csvFilePath = "<%= download_shelters_path %>";
@@ -29,9 +27,12 @@
               const userLat = position.coords.latitude;
               const userLon = position.coords.longitude;
 
+              console.log('User latitude:', userLat);
+              console.log('User longitude:', userLon);
+
               // 避難所との距離を計算してソート
               const sortedShelters = shelters.map(shelter => {
-                const distance = haversineDistance(userLat, userLon, parseFloat(shelter.latitude), parseFloat(shelter.longitude));
+                const distance = haversineDistance(userLat, userLon, parseFloat(shelter['緯度']), parseFloat(shelter['経度']));
                 return { ...shelter, distance };
               }).sort((a, b) => a.distance - b.distance);
 
@@ -73,7 +74,7 @@
     const nearbyShelters = shelters.slice(0, 3);
     nearbyShelters.forEach(shelter => {
       const shelterItem = document.createElement('div');
-      shelterItem.textContent = `${shelter.facility_name} - ${shelter.address} (${shelter.distance.toFixed(2)} km)`;
+      shelterItem.textContent = `${shelter['施設・場所名']} - ${shelter['住所']} (${shelter.distance.toFixed(2)} km)`;
       shelterList.appendChild(shelterItem);
     });
   }

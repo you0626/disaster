@@ -1,6 +1,5 @@
 document.addEventListener('DOMContentLoaded', function() {
-  const csvFilePath = '<%= download_shelters_path %>'; // ERBを利用してCSVファイルのパスを取得
-
+  const csvFilePath = document.currentScript.getAttribute('data-download-path');
   // CSVファイルのパスをコンソールに表示
   console.log('CSV file path:', csvFilePath);
 

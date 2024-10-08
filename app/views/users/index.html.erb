@@ -47,10 +47,63 @@
   <!-- 避難所検索 -->
   <section class="search-shelter">
     <h2>避難所検索</h2>
-    <%= form_with url: '#', method: :get, local: true do %>
-      <%= text_field_tag :search, nil, placeholder: '現在地からの検索...' %>
-      <%= submit_tag '検索' %>
-    <% end %>
+    <!-- 現在地から検索ボタン -->
+    <button id="search-shelter-button">現在地から検索</button>
+    <div id="shelter-list"></div>
+
+    <script>
+      document.addEventListener('DOMContentLoaded', function () {
+        // 現在地から検索ボタンがクリックされたときの処理
+        document.getElementById('search-shelter-button').addEventListener('click', function () {
+          if (navigator.geolocation) {
+            navigator.geolocation.getCurrentPosition(function(position) {
+              const userLat = position.coords.latitude;
+              const userLon = position.coords.longitude;
+
+              fetch('/shelters/nearby', {
+                method: 'POST',
+                headers: {
+                  'Content-Type': 'application/json',
+                  'X-CSRF-Token': '<%= form_authenticity_token %>'
+                },
+                body: JSON.stringify({
+                  latitude: userLat,
+                  longitude: userLon
+                })
+              })
+        .then(response => {
+          if (!response.ok) {
+            throw new Error('Network response was not ok');
+          }
+          return response.json();
+        })
+              .then(data => {
+                const shelterList = document.getElementById('shelter-list');
+                shelterList.innerHTML = '';
+
+                if (data.shelters && data.shelters.length > 0) {
+                  data.shelters.forEach(shelter => {
+                    const shelterItem = document.createElement('div');
+                    shelterItem.textContent = `${shelter.name} (${shelter.distance.toFixed(2)} km) - ${shelter.address}`;
+                    shelterList.appendChild(shelterItem);
+                  });
+                } else {
+                  shelterList.textContent = '近くの避難所が見つかりませんでした。';
+                }
+              })
+              .catch(error => {
+                console.error('Error:', error);
+          alert('避難所の検索に失敗しました。');
+              });
+            }, function(error) {
+              console.error('Error getting location:', error);
+            });
+          } else {
+            alert('Geolocation is not supported by this browser.');
+          }
+        });
+      });
+    </script>
   </section>
 
   <!-- 物資管理 -->
