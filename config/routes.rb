@@ -35,4 +35,6 @@ Rails.application.routes.draw do
   post 'shelters/nearby', to: 'shelters#nearby'
 
   root "users#index"
+
+  get 'search_shelters', to: 'shelters#search'
 end

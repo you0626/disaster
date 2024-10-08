@@ -55,7 +55,7 @@ class SheltersController < ApplicationController
     if latitude.present? && longitude.present?
       # Geocoderを使用して、近くの避難所を検索
       @shelters = Shelter.near([latitude, longitude], 10) # 10km以内
-      
+
       render json: { shelters: @shelters.map { |shelter| {
         name: shelter.name, 
         address: shelter.address, 
@@ -63,6 +63,14 @@ class SheltersController < ApplicationController
       } } }
     else
       render json: { error: '位置情報が提供されていません。' }, status: :unprocessable_entity
+    end
+  end
+
+  def search
+    if params[:region].present?
+      @shelters = Shelter.where(region: params[:region])
+    else
+      @shelters = Shelter.all
     end
   end
   
