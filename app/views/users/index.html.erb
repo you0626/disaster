@@ -2,7 +2,6 @@
   <section class="emergency-notification">
     <script>
       document.addEventListener("DOMContentLoaded", function() {
-        // 位置情報を取得し、サーバーに送信する
         if (navigator.geolocation) {
           navigator.geolocation.getCurrentPosition(function(position) {
             fetch('/users/update_location', {
@@ -22,10 +21,10 @@
         }
       });
     </script>
-    
+
     <!-- 災害通知の表示 -->
     <section class="disaster-notifications">
-      <h2>周辺エリアの災害通知</h2>
+      <h2><% if user_signed_in? %>周辺エリアの災害通知<% else %>全国の災害通知<% end %></h2>
 
       <% if @nearby_notifications.present? %>
         <ul>
@@ -39,7 +38,7 @@
           <% end %>
         </ul>
       <% else %>
-        <p>周辺エリアに災害通知はありません。</p>
+        <p>通知はありません。</p>
       <% end %>
     </section>
   </section>
@@ -47,17 +46,22 @@
   <!-- 避難所検索 -->
   <section class="search-shelter">
     <h2>避難所検索</h2>
-    <%= form_with url: '#', method: :get, local: true do %>
-      <%= text_field_tag :search, nil, placeholder: '現在地からの検索...' %>
-      <%= submit_tag '検索' %>
+    <% if user_signed_in? %>
+      <!-- 現在地から検索ボタン -->
+      <button id="search-shelter-button">現在地から検索</button>
+      <div id="shelter-list"></div>
+    <% else %>
+      <!-- 都道府県か市町村で検索 -->
+      <%= form_with url: search_shelters_path, method: :get, local: true do |form| %>
+        <%= form.label :region, "都道府県 or 区市町村" %>
+        <%= form.text_field :region %>
+        <%= form.submit "検索" %>
+      <% end %>
     <% end %>
   </section>
 
-  <!-- 物資管理 -->
-  <h1>物資管理</h1>
-
   <% if user_signed_in? %>
-    <!-- 必要な物のチェックリスト -->
+    <!-- 必要な物のチェックリスト（ログイン時のみ表示） -->
     <section class="checklist">
       <h2>必要な物のチェックリスト</h2>
       <ul>
@@ -74,7 +78,7 @@
       </ul>
     </section>
 
-    <!-- 備蓄品のリマインダー -->
+    <!-- 備蓄品のリマインダー（ログイン時のみ表示） -->
     <section class="reminders">
       <h2>備蓄品のリマインダー</h2>
       <ul>
@@ -89,8 +93,10 @@
         <% end %>
       </ul>
     </section>
+  <% end %>
 
-    <!-- ユーザーの最近のアクティビティ -->
+  <!-- 最近のアクティビティ（ログイン時のみ） -->
+  <% if user_signed_in? %>
     <section class="user-activity">
       <h2>最近のアクティビティ</h2>
       <p>最後のログイン: <%= current_user.last_login_at.strftime("%Y年%m月%d日 %H:%M") if current_user.last_login_at %></p>

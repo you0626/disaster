@@ -1,12 +1,29 @@
 <h1>避難所一覧</h1>
 
 <a href="<%= download_shelters_path %>">CSVダウンロード</a>
-<%# ボタンと表示エリアを追加 %>
 <button id="show-nearby-shelters">近くの避難所を表示</button>
 <div id="shelter-list"></div>
+<div id="map" style="width: 100%; height: 400px;"></div>
 
-<%# スクリプトを追加 %>
+<!-- Google Maps API を非同期でロードし、初期化に callback=initMap を追加 -->
+<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyA565GWcpGYFNUO2UPF9bRmMej7t4PW5ZY&callback=initMap" async defer></script>
+
 <script>
+  let map;
+  let marker;
+
+  // Google Mapsの初期化
+  function initMap() {
+    // 初期位置を仮に指定（例えば、東京駅の座標）
+    const initialLat = 35.681236;
+    const initialLon = 139.767125;
+    const mapOptions = {
+      center: { lat: initialLat, lng: initialLon },
+      zoom: 14
+    };
+    map = new google.maps.Map(document.getElementById('map'), mapOptions);
+  }
+
   document.addEventListener('DOMContentLoaded', function () {
     const csvFilePath = "<%= download_shelters_path %>";
     console.log('CSV file path:', csvFilePath);
@@ -22,20 +39,20 @@
         const shelters = parseCSV(data);
         console.log('Parsed shelters:', shelters);
 
-        // ボタンがクリックされたときにGPS機能と近くの避難所表示を実行
         document.getElementById('show-nearby-shelters').addEventListener('click', function () {
           if (navigator.geolocation) {
             navigator.geolocation.getCurrentPosition(function(position) {
               const userLat = position.coords.latitude;
               const userLon = position.coords.longitude;
 
-              // 避難所との距離を計算してソート
+              console.log('User latitude:', userLat);
+              console.log('User longitude:', userLon);
+
               const sortedShelters = shelters.map(shelter => {
-                const distance = haversineDistance(userLat, userLon, parseFloat(shelter.latitude), parseFloat(shelter.longitude));
+                const distance = haversineDistance(userLat, userLon, parseFloat(shelter['緯度']), parseFloat(shelter['経度']));
                 return { ...shelter, distance };
               }).sort((a, b) => a.distance - b.distance);
 
-              // 近くの避難所を表示
               displayShelters(sortedShelters);
             }, function(error) {
               console.error('Error getting location:', error);
@@ -64,29 +81,53 @@
     });
   }
 
-  // 近くの避難所を表示する関数
   function displayShelters(shelters) {
     const shelterList = document.getElementById('shelter-list');
-    shelterList.innerHTML = ''; // 以前のリストをクリア
+    shelterList.innerHTML = '';
 
-    // 近くの避難所を3件表示
     const nearbyShelters = shelters.slice(0, 3);
     nearbyShelters.forEach(shelter => {
       const shelterItem = document.createElement('div');
-      shelterItem.textContent = `${shelter.facility_name} - ${shelter.address} (${shelter.distance.toFixed(2)} km)`;
+      shelterItem.textContent = `${shelter['施設・場所名']} - ${shelter['住所']} (${shelter.distance.toFixed(2)} km)`;
+
+      // クリックしたときにマップを表示
+      shelterItem.addEventListener('click', function() {
+        const lat = parseFloat(shelter['緯度']);
+        const lon = parseFloat(shelter['経度']);
+        showShelterOnMap(lat, lon);
+      });
+
       shelterList.appendChild(shelterItem);
     });
   }
 
-  // ハーバシン距離計算の関数
+  function showShelterOnMap(lat, lon) {
+    if (!map) {
+      initMap(lat, lon);
+    }
+
+    // マーカーを作成または更新
+    if (!marker) {
+      marker = new google.maps.Marker({
+        position: { lat: lat, lng: lon },
+        map: map
+      });
+    } else {
+      marker.setPosition({ lat: lat, lng: lon });
+    }
+
+    // マップを新しい位置に移動
+    map.setCenter({ lat: lat, lng: lon });
+  }
+
   function haversineDistance(lat1, lon1, lat2, lon2) {
-    const R = 6371; // 地球の半径（キロメートル）
+    const R = 6371;
     const dLat = (lat2 - lat1) * Math.PI / 180;
     const dLon = (lon2 - lon1) * Math.PI / 180;
-    const a = Math.sin(dLat/2) * Math.sin(dLat/2) +
+    const a = Math.sin(dLat / 2) * Math.sin(dLat / 2) +
               Math.cos(lat1 * Math.PI / 180) * Math.cos(lat2 * Math.PI / 180) *
-              Math.sin(dLon/2) * Math.sin(dLon/2);
-    const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
-    return R * c; // 距離を返す
+              Math.sin(dLon / 2) * Math.sin(dLon / 2);
+    const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+    return R * c;
   }
 </script>
