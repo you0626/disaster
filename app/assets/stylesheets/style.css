@@ -172,3 +172,43 @@ a:hover {
 .dropdown-menu.show {
   display: block;
 }
+
+/* フレンド登録ボタンの周りの余計な四角をなくす */
+.friend-register-button {
+  border: none; /* ボーダーをなくす */
+  background-color: #007bff; /* ボタンの色 */
+  color: white; /* 文字の色 */
+  padding: 5px 10px; /* パディングで余白を調整 */
+  cursor: pointer;
+}
+
+.friend-register-button:hover {
+  background-color: #0056b3; /* ホバー時の色 */
+}
+
+/* フレンド名とボタンを横並びにする */
+li {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 10px; /* 下に少し余白を追加 */
+}
+
+span {
+  margin-right: 10px; /* 名前とボタンの間に余白を追加 */
+}
+
+.friend-remove-link {
+  background-color: red; /* 赤色に設定 */
+  color: white;          /* 文字色を白に設定 */
+  border: none;         /* 枠線を無くす */
+  padding: 10px 20px;   /* パディングを設定 */
+  text-align: center;    /* テキストを中央に配置 */
+  text-decoration: none;  /* 下線を無くす */
+  display: inline-block;  /* インラインブロック表示 */
+  border-radius: 5px;    /* 角を丸くする */
+  cursor: pointer;        /* カーソルをポインターに変更 */
+}
+
+.friend-remove-link:hover {
+  background-color: darkred; /* ホバー時に色を変更 */
+}

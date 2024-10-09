@@ -12,6 +12,7 @@
         <li><%= link_to "ログアウト", destroy_user_session_path, method: :delete %></li>
         <li><%= link_to "避難所情報", shelters_path %></li>
         <li><%= link_to "災害通知", user_disaster_notifications_path(current_user) %></li>
+        <li><%= link_to "フレンド", user_friendships_path(current_user) %></li>
         <li><%= link_to "チェックリスト", supplies_path %></li>
         <ul class="nav" data-controller="dropdown">
           <li class="nav-item dropdown">
