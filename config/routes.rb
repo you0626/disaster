@@ -49,4 +49,6 @@ Rails.application.routes.draw do
       get 'search', to: 'friendships#search', as: 'search_friendships'
     end
   end
+
+  resources :messages, only: [:index, :new, :create, :edit, :update, :destroy]
 end

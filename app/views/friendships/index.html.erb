@@ -50,8 +50,15 @@
 <% end %>
 
 <h2>メッセージ</h2>
-<% if flash[:notice].present? %>
-  <p><%= flash[:notice] %></p>
+<%= link_to 'メッセージ一覧', messages_path %>
+<% if @messages.present? %>
+  <ul>
+    <% @messages.each do |message| %>
+      <li>
+        <%= message.sender.name %>: <%= message.content %>
+      </li>
+    <% end %>
+  </ul>
 <% else %>
   <p>メッセージはありません。</p>
 <% end %>

@@ -7,12 +7,8 @@ class FriendshipsController < ApplicationController
     @friendships = Friendship.where(user_id: current_user.id)
     @user = current_user
     
-    # フラッシュメッセージを格納
-    if flash[:notice].present? && flash[:notice] != "Signed in successfully."
-      @messages = [flash[:notice]]  # メッセージがあれば配列に格納
-    else
-      @messages = []  # メッセージがない場合は空の配列
-    end
+    # メッセージをMessageモデルから取得し、最新5件を表示
+    @messages = Message.where(recipient_id: @user.id).order(created_at: :desc).limit(5)
 
     if params[:name].present?
       @search_results = User.where("name LIKE ?", "%#{params[:name]}%").where.not(id: current_user.id) # ユーザー名で検索
