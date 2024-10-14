@@ -5,3 +5,4 @@
 //= link shelters.csv
 //= link packs/application.js
 //= link_directory ../stylesheets .css
+//= link rails-ujs.js

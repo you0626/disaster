@@ -9,7 +9,8 @@
   <%= csp_meta_tag %>
 
   <%= stylesheet_link_tag "style", "data-turbo-track": "reload" %>
-
+  
+  <%= javascript_importmap_tags %>
   <%= javascript_include_tag "packs/application", "data-turbo-track": "reload" %>
   <%= javascript_include_tag 'shelter_data', 'data-turbo-track': 'reload', 'data-download-path': download_shelters_path %>
 </head>
