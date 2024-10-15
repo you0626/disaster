@@ -4,15 +4,20 @@
   <title>災害用アプリ</title>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  
+
   <%= csrf_meta_tags %>
   <%= csp_meta_tag %>
 
   <%= stylesheet_link_tag "style", "data-turbo-track": "reload" %>
-  
+
   <%= javascript_importmap_tags %>
   <%= javascript_include_tag "packs/application", "data-turbo-track": "reload" %>
-  <%= javascript_include_tag 'shelter_data', 'data-turbo-track': 'reload', 'data-download-path': download_shelters_path %>
+
+  <!-- Google Maps APIを非同期で読み込む -->
+  <script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyA565GWcpGYFNUO2UPF9bRmMej7t4PW5ZY&callback=initMap&libraries=marker"></script>
+
+  <!-- crossorigin 属性を追加 -->
+  <%= javascript_include_tag 'shelter_data', 'data-turbo-track': 'reload', 'data-download-path': download_shelters_path, crossorigin: "anonymous" %>
 </head>
 <body>
   <!-- ヘッダーのレンダリング -->
@@ -21,9 +26,28 @@
   <main>
     <!-- ページ固有のコンテンツ -->
     <%= yield %>
+    <!-- マップを表示するためのdivを追加 -->
+    <div id="map" style="width: 100%; height: 400px;"></div>
   </main>
 
   <!-- フッターのレンダリング -->
   <%= render 'layouts/footer' %>
+
+  <script>
+    let map; // グローバルに宣言
+
+    // initMapをグローバルに公開
+    window.initMap = function() {
+      // Google Mapsの初期化
+      const initialLat = 35.681236;
+      const initialLon = 139.767125;
+      const mapOptions = {
+        center: { lat: initialLat, lng: initialLon },
+        zoom: 14
+      };
+      map = new google.maps.Map(document.getElementById('map'), mapOptions); // グローバル変数を使用
+      console.log('Map initialized:', map); // 初期化確認用
+    }
+  </script>
 </body>
 </html>

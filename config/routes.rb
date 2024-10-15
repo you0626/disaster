@@ -25,7 +25,7 @@ Rails.application.routes.draw do
 
   resources :shelters, except: [:show] do
     collection do
-      get 'download', to: 'shelters#download', as: 'download'
+      get 'download_shelters', to: 'shelters#download_shelters', as: 'download' # 修正
       post 'nearby', to: 'shelters#nearby'
       get 'search', to: 'friendships#search', as: 'search_friends'
       get 'search', to: 'shelters#search'
