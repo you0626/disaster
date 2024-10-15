@@ -1,0 +1,22 @@
+<h2>メッセージ</h2>
+
+<!-- メッセージの新規作成リンクを追加 -->
+<%= link_to '新しいメッセージを作成', new_message_path, class: "btn btn-sm btn-success" %>
+
+<h2>メッセージ一覧</h2>
+<ul>
+  <% @messages.each do |message| %>
+    <li>
+      <strong>送信者: <%= User.find(message.sender_id).name %></strong>
+      <strong>宛先: <%= User.find(message.recipient_id).name %></strong>
+      <p>メッセージ: <%= message.content %></p>
+      <em>投稿時間: <%= message.created_at.strftime("%Y-%m-%d %H:%M") %></em>
+
+      <!-- メッセージの送信者が現在のユーザーであれば、編集と削除リンクを表示 -->
+      <% if message.sender_id == current_user.id %>
+        <%= link_to '編集', edit_message_path(message), class: "btn btn-sm btn-primary" %>
+        <%= link_to "削除", message_path(message), data: { turbo_method: :delete }, class: "btn btn-sm btn-primary" %>
+      <% end %>
+    </li>
+  <% end %>
+</ul>

@@ -8,6 +8,8 @@ class User < ApplicationRecord
   has_many :disaster_notifications
   has_many :shelters, class_name: 'Shelter'
   has_many :supplies
+  has_many :sent_messages, class_name: "Message", foreign_key: "sender_id"
+  has_many :received_messages, class_name: "Message", foreign_key: "recipient_id"
 
   geocoded_by :current_sign_in_ip do |obj, results|
     if geo = results.first

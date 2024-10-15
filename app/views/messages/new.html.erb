@@ -1,0 +1,13 @@
+<%= form_with model: @message, local: true do |f| %>
+  <div class="form-group">
+    <%= f.label :recipient_id, "送信相手" %>
+    <%= f.collection_select :recipient_id, current_user.friends, :id, :name, prompt: "送信相手を選択" %>
+  </div>
+  
+  <div class="form-group">
+    <%= f.label :content, "メッセージ" %>
+    <%= f.text_area :content, rows: 5 %>
+  </div>
+  
+  <%= f.submit "送信", class: "btn btn-primary" %>
+<% end %>

@@ -13,15 +13,24 @@ Rails.application.routes.draw do
   get '/manuals', to: 'manuals#index'
 
   resources :users do
-    resources :friendships
+    resources :friendships do
+      collection do
+        get 'search', to: 'friendships#search', as: 'search_friendships'
+      end
+    end
     resources :posts
     resources :disaster_notifications
     post 'update_location', on: :collection
   end
 
-  resources :shelters, except: [:show]
-
-  get 'shelters/download_shelters', to: 'shelters#download_shelters', as: 'download_shelters'
+  resources :shelters, except: [:show] do
+    collection do
+      get 'download_shelters', to: 'shelters#download_shelters', as: 'download' # 修正
+      post 'nearby', to: 'shelters#nearby'
+      get 'search', to: 'friendships#search', as: 'search_friends'
+      get 'search', to: 'shelters#search'
+    end
+  end
 
   resources :supplies
 
@@ -32,9 +41,14 @@ Rails.application.routes.draw do
     end
   end
 
-  post 'shelters/nearby', to: 'shelters#nearby'
-
   root "users#index"
 
-  get 'search_shelters', to: 'shelters#search'
+  # フレンドシップ関連のルート
+  resources :friendships, only: [:create, :destroy] do
+    collection do
+      get 'search', to: 'friendships#search', as: 'search_friendships'
+    end
+  end
+
+  resources :messages, only: [:index, :new, :create, :edit, :update, :destroy]
 end
