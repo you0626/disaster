@@ -48,8 +48,10 @@
     <h2>避難所検索</h2>
     <% if user_signed_in? %>
       <!-- 現在地から検索ボタン -->
-      <button id="search-shelter-button">現在地から検索</button>
+      <button id="search-shelter-button">現在地がら一番近い避難所を表示</button>
       <div id="shelter-list"></div>
+      <!-- マップを表示するためのdivを追加 -->
+      <div id="map" style="width: 100%; height: 400px;"></div>
     <% else %>
       <!-- 都道府県か市町村で検索 -->
       <%= form_with url: search_shelters_path, method: :get, local: true do |form| %>
@@ -57,6 +59,8 @@
         <%= form.text_field :region %>
         <%= form.submit "検索" %>
       <% end %>
+     <!-- マップを表示するためのdivを追加 -->
+     <div id="map" style="width: 100%; height: 400px;"></div>
     <% end %>
   </section>
 
@@ -110,3 +114,121 @@
     <%= link_to '台風マニュアル', typhoon_manual_index_path %><br>
   </section>
 </main>
+
+<script>
+  let map;
+  let marker;
+
+  // Google Mapsの初期化
+  window.initMap = function() {
+    const initialLat = 35.681236; // 東京駅の緯度
+    const initialLon = 139.767125; // 東京駅の経度
+    const mapOptions = {
+      center: { lat: initialLat, lng: initialLon },
+      zoom: 14
+    };
+    map = new google.maps.Map(document.getElementById('map'), mapOptions);
+  }
+
+  document.addEventListener('DOMContentLoaded', function () {
+    const csvFilePath = "<%= download_shelters_path %>";
+
+    // 現在地から検索ボタンのクリックイベント
+    document.getElementById('search-shelter-button').addEventListener('click', function () {
+      if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition(function(position) {
+          const userLat = position.coords.latitude;
+          const userLon = position.coords.longitude;
+
+          console.log('User latitude:', userLat);
+          console.log('User longitude:', userLon);
+
+          fetch(csvFilePath)
+            .then(response => {
+              if (!response.ok) {
+                throw new Error('Network response was not ok');
+              }
+              return response.text();
+            })
+            .then(data => {
+              const shelters = parseCSV(data);
+              const nearestShelter = findNearestShelter(userLat, userLon, shelters);
+              if (nearestShelter) {
+                showShelterOnMap(nearestShelter);
+              } else {
+                console.error('No nearby shelters found.');
+              }
+            })
+            .catch(error => {
+              console.error('There was a problem with the fetch operation:', error);
+            });
+        }, function(error) {
+          console.error('Error getting location:', error);
+        });
+      } else {
+        alert('Geolocation is not supported by this browser.');
+      }
+    });
+  });
+
+  function parseCSV(data) {
+    const lines = data.split('\n');
+    const headers = lines[0].split(',');
+
+    return lines.slice(1).map(line => {
+      const values = line.split(',');
+      const shelter = {};
+      headers.forEach((header, index) => {
+        shelter[header.trim()] = values[index] ? values[index].trim() : null;
+      });
+      return shelter;
+    });
+  }
+
+  function findNearestShelter(userLat, userLon, shelters) {
+    let nearestShelter = null;
+    let minDistance = Infinity;
+
+    shelters.forEach(shelter => {
+      const shelterLat = parseFloat(shelter['緯度']);
+      const shelterLon = parseFloat(shelter['経度']);
+      const distance = haversineDistance(userLat, userLon, shelterLat, shelterLon);
+
+      if (distance < minDistance) {
+        minDistance = distance;
+        nearestShelter = shelter;
+      }
+    });
+
+    return nearestShelter;
+  }
+
+  function showShelterOnMap(shelter) {
+    const lat = parseFloat(shelter['緯度']);
+    const lon = parseFloat(shelter['経度']);
+    
+    // マーカーを作成
+    if (!marker) {
+      marker = new google.maps.Marker({
+        position: { lat: lat, lng: lon },
+        map: map
+      });
+    } else {
+      marker.setPosition({ lat: lat, lng: lon });
+    }
+
+    // マップを新しい位置に移動
+    map.setCenter({ lat: lat, lng: lon });
+  }
+
+  function haversineDistance(lat1, lon1, lat2, lon2) {
+    const R = 6371; // 地球の半径（km）
+    const dLat = (lat2 - lat1) * Math.PI / 180;
+    const dLon = (lon2 - lon1) * Math.PI / 180;
+    const a = Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+              Math.cos(lat1 * Math.PI / 180) * Math.cos(lat2 * Math.PI / 180) *
+              Math.sin(dLon / 2) * Math.sin(dLon / 2);
+    const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+    return R * c;
+  }
+</script>
