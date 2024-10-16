@@ -3,6 +3,7 @@ class MessagesController < ApplicationController
 
   # メッセージ一覧表示 (最新5件)
   def index
+    @messages = Message.where(recipient_id: current_user.id).includes(:sender)
     @received_messages = Message.where(recipient_id: current_user.id).order(created_at: :desc)
     @sent_messages = Message.where(sender_id: current_user.id).order(created_at: :desc)
 
