@@ -1,12 +1,15 @@
-<h1>各地気象情報</h1>
-<%= button_to '最新の気象情報を取得', fetch_and_save_weather_notifications_path, method: :post, class: 'btn btn-primary' %>
+<div class="text-center">
+  <h1 class="underline">各地気象情報</h1>
+  <p><strong>取得日時:</strong> <%= @weather_notifications.any? ? @weather_notifications.first.fetched_at.strftime("%Y年%m月%d日 %H:%M") : '取得されていません' %></p>
+  
+  <%= button_to '最新の気象情報を取得', fetch_and_save_weather_notifications_path, method: :post, class: 'btn btn-primary btn-lg' %>
+</div>
 
+<div class="alert alert-warning">
+  <strong>注意:</strong> 最新の気象情報を取得すると、既存のデータはすべて削除され、新しい情報に更新されます。更新まで少し時間がかかります。
+</div>
 
 <div class="weather-notifications">
-  <% if @weather_notifications.any? %>
-    <p><strong>取得日時:</strong> <%= @weather_notifications.first.fetched_at.strftime("%Y年%m月%d日 %H:%M") %></p>
-  <% end %>
-
   <% @grouped_notifications.each do |region_name, notifications| %>
     <div class="notification-item">
       <h2><%= region_name %></h2>
@@ -27,8 +30,24 @@
   <% end %>
 </div>
 
-
 <style>
+  .text-center {
+    text-align: center; /* 中央配置 */
+    margin-bottom: 20px; /* 余白調整 */
+  }
+
+  .underline {
+    text-decoration: underline; /* 下線 */
+    margin-bottom: 10px; /* 下の余白調整 */
+    font-size: 2rem; /* フォントサイズを大きく */
+    color: blue;
+  }
+
+  .btn-lg {
+    font-size: 1.5rem; /* ボタンのフォントサイズを大きく */
+    padding: 10px 20px; /* ボタンの内側の余白を調整 */
+  }
+
   .weather-notifications {
     display: flex;
     flex-direction: column;
@@ -53,5 +72,14 @@
     font-size: 16px;
     line-height: 1.6;
     color: #34495e;
+  }
+
+  .alert {
+    margin-bottom: 20px;
+    padding: 15px;
+    background-color: #fff3cd;
+    border: 1px solid #ffeeba;
+    border-radius: 5px;
+    color: #856404;
   }
 </style>

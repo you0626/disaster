@@ -7,8 +7,12 @@ class WeatherNotificationsController < ApplicationController
     @weather_notifications = WeatherNotification.all.order(fetched_at: :desc)
     @grouped_notifications = @weather_notifications.group_by { |notification| notification.title }
   end
-  
+
   def fetch_and_save
+
+    # 既存の気象情報を削除
+    WeatherNotification.delete_all
+    
     # 地方ごとの地域IDを定義
     regions = {
       '北海道' => [
