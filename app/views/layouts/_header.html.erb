@@ -8,7 +8,7 @@
         <li class="welcome-message">ようこそ、<%= current_user.name %>さん</li>
         <li><%= link_to "ログアウト", destroy_user_session_path, method: :delete %></li>
         <li><%= link_to "避難所情報", shelters_path %></li>
-        <li><%= link_to "災害通知", user_disaster_notifications_path(current_user) %></li>
+        <li><%= link_to "地震情報", user_disaster_notifications_path(current_user) %></li>
         <li><%= link_to "フレンド / メッセージ", user_friendships_path(current_user) %></li>
         <li><%= link_to "備蓄品チェックリスト", supplies_path %></li>
         <li><%= link_to "地震マニュアル", earthquake_manual_index_path %></li>

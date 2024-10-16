@@ -1,17 +1,76 @@
-<% if @national_notifications.present? %>
-  <section class="national-disaster-notifications">
-    <h2>全国の災害通知</h2>
+<h1 class="earthquake-title">過去1ヶ月の震度3以上の地震情報</h1>
+
+<div class="earthquake-notifications">
+  <% if @national_notifications.any? %>
     <ul>
       <% @national_notifications.each do |notification| %>
-        <li>
-          <strong>災害名:</strong> <%= notification[:title] %><br>
-          <strong>発生日時:</strong> <%= notification[:occurred_at].strftime("%Y年%m月%d日 %H:%M") %><br>
-          <strong>詳細:</strong> <%= notification[:details] %><br>
-          <strong>場所:</strong> <%= notification[:location] %>
-        </li>
+        <% if notification.present? %>
+          <li>
+            <div class="notification-details">
+              <strong>発生日時:</strong> <%= notification[:occurred_at].strftime("%Y年%m月%d日 %H:%M") %><br>
+              <strong>マグニチュード:</strong> <%= notification[:details].match(/マグニチュード: ([0-9.]+)/)[1] if notification[:details].match(/マグニチュード: ([0-9.]+)/) %><br>
+              <strong>最大震度:</strong> <%= notification[:details].match(/最大震度: (.+)/)[1] if notification[:details].match(/最大震度: (.+)/) %><br>
+              <strong>場所:</strong> <%= notification[:location] %>
+            </div>
+          </li>
+        <% else %>
+          <p>地震情報がありません。</p>
+        <% end %>
       <% end %>
     </ul>
-  </section>
-<% else %>
-  <p>現在、全国で報告された災害通知はありません。</p>
-<% end %>
+  <% else %>
+    <p>過去1ヶ月間に震度3以上の地震がありません。</p>
+  <% end %>
+</div>
+
+<style>
+  .earthquake-title {
+    color: blue;
+    text-align: center; /* 中央揃え */
+    text-decoration: underline; /* 下線を追加 */
+  }
+
+  .earthquake-notifications {
+    padding: 20px;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    background-color: #f4f4f4;
+    max-width: 800px; /* 最大幅を設定して中央に寄せる */
+    margin: 0 auto; /* 中央寄せ */
+  }
+
+  .earthquake-notifications ul {
+    list-style-type: none;
+    padding: 0;
+    margin: 0;
+  }
+
+  .earthquake-notifications li {
+    margin-bottom: 15px;
+    padding: 15px;
+    border: 1px solid #aaa;
+    border-radius: 5px;
+    background-color: #fff;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* 影を付けて立体感を追加 */
+  }
+
+  .notification-details {
+    font-size: 16px; /* 詳細部分のフォントサイズを調整 */
+    color: #34495e; /* 詳細部分の色を変更 */
+  }
+
+  /* モバイル端末でのレスポンシブデザイン */
+  @media (max-width: 600px) {
+    .earthquake-notifications {
+      padding: 10px;
+    }
+
+    .earthquake-notifications li {
+      padding: 10px;
+    }
+
+    .notification-details {
+      font-size: 14px; /* モバイルでのフォントサイズを調整 */
+    }
+  }
+</style>

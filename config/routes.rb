@@ -19,7 +19,7 @@ Rails.application.routes.draw do
       end
     end
     resources :posts
-    resources :disaster_notifications
+    resources :disaster_notifications, only: [:index]
     post 'update_location', on: :collection
   end
 

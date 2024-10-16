@@ -1,48 +1,11 @@
 <main>
-  <%= link_to"各地気象情報", weather_notifications_path %>
-  <section class="emergency-notification">
-    <script>
-      document.addEventListener("DOMContentLoaded", function() {
-        if (navigator.geolocation) {
-          navigator.geolocation.getCurrentPosition(function(position) {
-            fetch('/users/update_location', {
-              method: 'POST',
-              headers: {
-                'Content-Type': 'application/json',
-                'X-CSRF-Token': '<%= form_authenticity_token %>'
-              },
-              body: JSON.stringify({
-                latitude: position.coords.latitude,
-                longitude: position.coords.longitude
-              })
-            });
-          });
-        } else {
-          alert("現在位置情報を取得できませんでした。");
-        }
-      });
-    </script>
 
     <!-- 災害通知の表示 -->
     <section class="disaster-notifications">
-      <h2><% if user_signed_in? %>周辺エリアの災害通知<% else %>全国の災害通知<% end %></h2>
-
-      <% if @nearby_notifications.present? %>
-        <ul>
-          <% @nearby_notifications.each do |notification| %>
-            <li>
-              <strong>災害名:</strong> <%= notification.title %><br>
-              <strong>発生日時:</strong> <%= notification.occurred_at.strftime("%Y年%m月%d日 %H:%M") %><br>
-              <strong>詳細:</strong> <%= notification.details %><br>
-              <strong>場所:</strong> <%= notification.location %>
-            </li>
-          <% end %>
-        </ul>
-      <% else %>
-        <p>通知はありません。</p>
-      <% end %>
+      <h2>各地災害情報</h2>
+      <%= link_to "地震情報", user_disaster_notifications_path(current_user) %><br>
+      <%= link_to "気象情報", weather_notifications_path %><br>
     </section>
-  </section>
 
   <!-- 避難所検索 -->
   <section class="search-shelter">
