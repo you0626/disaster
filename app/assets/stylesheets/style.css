@@ -155,24 +155,6 @@ a:hover {
   align-items: center;
 }
 
-.dropdown-menu {
-  display: none; /* 初期状態では非表示 */
-  position: absolute; /* 必要に応じて */
-  /* その他のスタイル */
-}
-
-.dropdown-menu.show {
-  display: block; /* .show クラスが付与されたときに表示 */
-}
-
-.dropdown-menu {
-  display: none;
-}
-
-.dropdown-menu.show {
-  display: block;
-}
-
 /* フレンド登録ボタンの周りの余計な四角をなくす */
 .friend-register-button {
   border: none; /* ボーダーをなくす */

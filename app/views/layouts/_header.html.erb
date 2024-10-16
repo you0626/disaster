@@ -2,9 +2,6 @@
   <div class="logo">
     <%= link_to "災害用アプリ", users_path %>
   </div>
-  <div data-controller="hello">
-    Test Stimulus
-  </div>
   <nav>
     <ul>
       <% if user_signed_in? %>
@@ -12,33 +9,15 @@
         <li><%= link_to "ログアウト", destroy_user_session_path, method: :delete %></li>
         <li><%= link_to "避難所情報", shelters_path %></li>
         <li><%= link_to "災害通知", user_disaster_notifications_path(current_user) %></li>
-        <li><%= link_to "フレンド", user_friendships_path(current_user) %></li>
-        <li><%= link_to "チェックリスト", supplies_path %></li>
-        <ul class="nav" data-controller="dropdown">
-          <li class="nav-item dropdown">
-            <a class="nav-link dropdown-toggle" data-action="click->dropdown#toggleMenu" href="#" role="button" aria-haspopup="true" aria-expanded="false">
-              マニュアル
-            </a>
-            <ul data-dropdown-target="menu" class="dropdown-menu">
-              <li><a class="dropdown-item" href="<%= earthquake_manual_index_path %>">地震マニュアル</a></li>
-              <li><a class="dropdown-item" href="<%= typhoon_manual_index_path %>">台風マニュアル</a></li>
-            </ul>
-          </li>
-        </ul>
+        <li><%= link_to "フレンド / メッセージ", user_friendships_path(current_user) %></li>
+        <li><%= link_to "備蓄品チェックリスト", supplies_path %></li>
+        <li><%= link_to "地震マニュアル", earthquake_manual_index_path %></li>
+        <li><%= link_to "台風マニュアル", typhoon_manual_index_path%>
       <% else %>
         <li><%= link_to "新規登録", new_user_registration_path %></li>
         <li><%= link_to "ログイン", new_user_session_path %></li>
-        <ul class="nav" data-controller="dropdown">
-          <li class="nav-item dropdown">
-            <a class="nav-link dropdown-toggle" data-action="click->dropdown#toggleMenu" href="#" role="button" aria-haspopup="true" aria-expanded="false">
-              マニュアル
-            </a>
-            <ul data-dropdown-target="menu" class="dropdown-menu">
-              <li><a class="dropdown-item" href="<%= earthquake_manual_index_path %>">地震マニュアル</a></li>
-              <li><a class="dropdown-item" href="<%= typhoon_manual_index_path %>">台風マニュアル</a></li>
-            </ul>
-          </li>
-        </ul>
+        <li><%= link_to "地震マニュアル", earthquake_manual_index_path %></li>
+        <li><%= link_to "台風マニュアル", typhoon_manual_index_path%>
       <% end %>
     </ul>
   </nav>
