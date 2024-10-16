@@ -3,6 +3,7 @@
 <%= link_to '新しいメッセージを作成', new_message_path, class: "btn btn-sm btn-success" %>
 
 <h2>メッセージ一覧</h2>
+<h4>※過去100件を表示してます。それより前のメッセージは自動で削除されます。</h4>
 <ul>
   <% @messages.each do |message| %>
     <li>
@@ -14,7 +15,7 @@
       <!-- メッセージの送信者が現在のユーザーであれば、編集と削除リンクを表示 -->
       <% if message.sender_id == current_user.id %>
         <%= link_to '編集', edit_message_path(message), class: "btn btn-sm btn-primary" %>
-        <%= link_to "削除", message_path(message), data: { turbo_method: :delete }, class: "btn btn-sm btn-primary" %>
+        <%= button_to "削除", message_path(message), method: :delete, data: { confirm: "本当に削除しますか？" }, class: "btn btn-sm btn-primary" %>
       <% end %>
     </li>
   <% end %>
