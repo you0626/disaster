@@ -50,4 +50,10 @@ Rails.application.routes.draw do
   end
 
   resources :messages, only: [:index, :new, :create, :edit, :update, :destroy]
+
+  resources :weather_notifications, only: [:index] do
+    collection do
+      post :fetch_and_save
+    end
+  end
 end

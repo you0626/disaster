@@ -1,0 +1,57 @@
+<h1>各地気象情報</h1>
+<%= button_to '最新の気象情報を取得', fetch_and_save_weather_notifications_path, method: :post, class: 'btn btn-primary' %>
+
+
+<div class="weather-notifications">
+  <% if @weather_notifications.any? %>
+    <p><strong>取得日時:</strong> <%= @weather_notifications.first.fetched_at.strftime("%Y年%m月%d日 %H:%M") %></p>
+  <% end %>
+
+  <% @grouped_notifications.each do |region_name, notifications| %>
+    <div class="notification-item">
+      <h2><%= region_name %></h2>
+      <% if notifications.any? %>
+        <ul>
+          <% notifications.each do |notification| %>
+            <li>
+              <div class="content">
+                <%= notification.content %><br>
+              </div>
+            </li>
+          <% end %>
+        </ul>
+      <% else %>
+        <p>現在、<%= region_name %>で報告された気象情報はありません。</p>
+      <% end %>
+    </div>
+  <% end %>
+</div>
+
+
+<style>
+  .weather-notifications {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+  }
+
+  .notification-item {
+    padding: 15px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    background-color: #f4f4f4;
+  }
+
+  .notification-item h2 {
+    margin-bottom: 10px;
+    font-size: 20px;
+    color: #2c3e50;
+  }
+
+  .notification-item .content {
+    margin-bottom: 15px;
+    font-size: 16px;
+    line-height: 1.6;
+    color: #34495e;
+  }
+</style>

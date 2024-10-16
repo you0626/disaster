@@ -4,10 +4,10 @@
     <ul>
       <% @national_notifications.each do |notification| %>
         <li>
-          <strong>災害名:</strong> <%= notification.title %><br>
-          <strong>発生日時:</strong> <%= notification.occurred_at.strftime("%Y年%m月%d日 %H:%M") %><br>
-          <strong>詳細:</strong> <%= notification.details %><br>
-          <strong>場所:</strong> <%= notification.location %>
+          <strong>災害名:</strong> <%= notification[:title] %><br>
+          <strong>発生日時:</strong> <%= notification[:occurred_at].strftime("%Y年%m月%d日 %H:%M") %><br>
+          <strong>詳細:</strong> <%= notification[:details] %><br>
+          <strong>場所:</strong> <%= notification[:location] %>
         </li>
       <% end %>
     </ul>
