@@ -1,141 +1,160 @@
-<h1>避難所一覧</h1>
+<h1 style="text-align: center; color: blue; text-decoration: underline;">避難所一覧</h1>
 
-<a href="<%= download_shelters_path %>">CSVダウンロード</a>
-<button id="show-nearby-shelters">近くの避難所を表示</button>
-<div id="shelter-list"></div>
-<div id="map" style="width: 100%; height: 400px;"></div>
+<a href="<%= download_shelters_path %>" style="font-size: 1.2em;">CSVダウンロード　(更新日時: 2024年10月17日)</a>
+
+<!-- 検索フォームを追加 -->
+<form id="shelter-search-form">
+  <label for="search-region">都道府県 or 市区町村</label>
+  <input type="text" id="search-region" name="region" placeholder="例: 東京都, 渋谷区">
+  <button type="submit">検索</button>
+</form>
+
+<div style="text-align: center; margin-top: 50px;">
+  <button id="show-nearby-shelters">近くの避難所を表示</button>
+  <span style="margin-left: 10px;">自動で近くの避難所を3件表示します。</span>
+</div>
+
+<!-- 検索結果を少し下に、右に配置 -->
+<div id="shelter-list" style="margin-top: 30px; margin-left: 50px;"></div>
+
+<!-- 地図を少し下に配置 -->
+<div id="map" style="width: 100%; height: 400px; margin-top: 50px;"></div>
+
 
 <script>
-  let map;
-  let marker;
+let map;
+let marker;
+let userLat, userLon;
 
-  // Google Mapsの初期化
-  function initMap() {
-    const initialLat = 35.681236; // 東京駅の緯度
-    const initialLon = 139.767125; // 東京駅の経度
-    const mapOptions = {
-      center: { lat: initialLat, lng: initialLon },
-      zoom: 14
-    };
+document.addEventListener('DOMContentLoaded', function () {
+  initMap(); // マップの初期化
 
-    map = new google.maps.Map(document.getElementById('map'), mapOptions);
-    console.log('Map initialized:', map); // マップ初期化の確認
-  }
+  const csvFilePath = "<%= download_shelters_path %>";
 
-  document.addEventListener('DOMContentLoaded', function () {
-    console.log('DOM fully loaded and parsed, initializing map...');
-    initMap(); // DOMが読み込まれたときにマップを初期化
-
-    const csvFilePath = "<%= download_shelters_path %>";
-    console.log('CSV file path:', csvFilePath);
-
-    fetch(csvFilePath)
-      .then(response => {
-        if (!response.ok) {
-          throw new Error('Network response was not ok');
-        }
-        return response.text();
-      })
-      .then(data => {
-        const shelters = parseCSV(data);
-        console.log('Parsed shelters:', shelters);
-
-        document.getElementById('show-nearby-shelters').addEventListener('click', function () {
-          if (navigator.geolocation) {
-            navigator.geolocation.getCurrentPosition(function(position) {
-              const userLat = position.coords.latitude;
-              const userLon = position.coords.longitude;
-
-              console.log('User latitude:', userLat);
-              console.log('User longitude:', userLon);
-
-              const sortedShelters = shelters.map(shelter => {
-                const distance = haversineDistance(userLat, userLon, parseFloat(shelter['緯度']), parseFloat(shelter['経度']));
-                return { ...shelter, distance };
-              }).sort((a, b) => a.distance - b.distance);
-
-              displayShelters(sortedShelters);
-            }, function(error) {
-              console.error('Error getting location:', error);
-            });
-          } else {
-            alert('Geolocation is not supported by this browser.');
-          }
+  fetch(csvFilePath)
+    .then(response => {
+      if (!response.ok) {
+        throw new Error('Network response was not ok');
+      }
+      return response.text();
+    })
+    .then(data => {
+      const shelters = parseCSV(data);
+      
+      // ユーザーの位置を取得
+      if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition(function(position) {
+          userLat = position.coords.latitude;
+          userLon = position.coords.longitude;
         });
-      })
-      .catch(error => {
-        console.error('There was a problem with the fetch operation:', error);
-      });
-  });
+      }
 
-  function parseCSV(data) {
-    const lines = data.split('\n');
-    const headers = lines[0].split(',');
+      // 近くの避難所を表示ボタンのクリックイベント
+      document.getElementById('show-nearby-shelters').addEventListener('click', function () {
+        if (userLat !== undefined && userLon !== undefined) {
+          const sortedShelters = shelters.map(shelter => {
+            const distance = haversineDistance(userLat, userLon, parseFloat(shelter['緯度']), parseFloat(shelter['経度']));
+            return { ...shelter, distance };
+          }).sort((a, b) => a.distance - b.distance);
 
-    return lines.slice(1).map(line => {
-      const values = line.split(',');
-      const shelter = {};
-      headers.forEach((header, index) => {
-        shelter[header.trim()] = values[index] ? values[index].trim() : null;
-      });
-      return shelter;
-    });
-  }
-
-  function displayShelters(shelters) {
-    const shelterList = document.getElementById('shelter-list');
-    shelterList.innerHTML = '';
-
-    const nearbyShelters = shelters.slice(0, 3);
-    nearbyShelters.forEach(shelter => {
-      const shelterItem = document.createElement('div');
-      shelterItem.textContent = `${shelter['施設・場所名']} - ${shelter['住所']} (${shelter.distance.toFixed(2)} km)`;
-
-      // クリックしたときにマップを表示
-      shelterItem.addEventListener('click', function() {
-        const lat = parseFloat(shelter['緯度']);
-        const lon = parseFloat(shelter['経度']);
-        console.log('Showing shelter at:', lat, lon); // 位置確認のログ
-
-        // マップが初期化されているか確認
-        if (map) {
-          showShelterOnMap(lat, lon);
+          displayShelters(sortedShelters, userLat, userLon);
         } else {
-          console.error('Map is not initialized.'); // デバッグ用エラーメッセージ
-          alert('Map is not initialized. Please try again.'); // ユーザーへの通知
+          alert('位置情報を取得できませんでした。');
         }
       });
 
-      shelterList.appendChild(shelterItem);
-    });
-  }
-
-  function showShelterOnMap(lat, lon) {
-    // マーカーを作成または更新
-    if (!marker) {
-      marker = new google.maps.Marker({
-        position: { lat: lat, lng: lon },
-        map: map
+      // 検索フォームの送信イベント
+      document.getElementById('shelter-search-form').addEventListener('submit', function (event) {
+        event.preventDefault();
+        const searchRegion = document.getElementById('search-region').value.trim();
+        
+        if (searchRegion) {
+          const filteredShelters = shelters.filter(shelter => 
+            shelter['住所'].includes(searchRegion) || shelter['施設・場所名'].includes(searchRegion)
+          );
+          displayShelters(filteredShelters, userLat, userLon);
+        } else {
+          alert('検索フィールドを入力してください。');
+        }
       });
-      console.log('Marker created at:', { lat: lat, lng: lon });
-    } else {
-      marker.setPosition({ lat: lat, lng: lon });
-      console.log('Marker updated to:', { lat: lat, lng: lon });
-    }
+    })
+    .catch(error => {
+      console.error('There was a problem with the fetch operation:', error);
+    });
+});
 
-    // マップを新しい位置に移動
-    map.setCenter({ lat: lat, lng: lon });
-    console.log('Map center set to:', { lat: lat, lng: lon }); // 中心設定の確認
+function parseCSV(data) {
+  const lines = data.split('\n');
+  const headers = lines[0].split(',');
+
+  return lines.slice(1).map(line => {
+    const values = line.split(',');
+    const shelter = {};
+    headers.forEach((header, index) => {
+      shelter[header.trim()] = values[index] ? values[index].trim() : null;
+    });
+    return shelter;
+  });
+}
+
+function displayShelters(shelters, userLat, userLon) {
+  const shelterList = document.getElementById('shelter-list');
+  shelterList.innerHTML = '';
+
+  if (shelters.length === 0) {
+    shelterList.textContent = '該当する避難所が見つかりませんでした。';
+    return;
   }
 
-  function haversineDistance(lat1, lon1, lat2, lon2) {
-    const R = 6371; // 地球の半径（km）
-    const dLat = (lat2 - lat1) * Math.PI / 180;
-    const dLon = (lon2 - lon1) * Math.PI / 180;
-    const a = Math.sin(dLat / 2) * Math.sin(dLat / 2) +
-              Math.cos(lat1 * Math.PI / 180) * Math.cos(lat2 * Math.PI / 180) *
-              Math.sin(dLon / 2) * Math.sin(dLon / 2);
-    const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
-    return R * c; // 距離（km）
+  shelters.forEach(shelter => {
+    const shelterItem = document.createElement('div');
+    const lat = parseFloat(shelter['緯度']);
+    const lon = parseFloat(shelter['経度']);
+    
+    // ユーザーと避難所の距離を計算
+    const distance = userLat !== undefined && userLon !== undefined ? 
+                     haversineDistance(userLat, userLon, lat, lon).toFixed(2) : 
+                     '距離情報なし';
+
+    // 表示形式を変更
+    shelterItem.textContent = `施設名：${shelter['施設・場所名']}　/　住所：${shelter['住所']} (距離: ${distance} km)`;
+
+    shelterItem.addEventListener('click', function() {
+      showShelterOnMap(lat, lon);
+    });
+
+    shelterList.appendChild(shelterItem);
+  });
+}
+
+function showShelterOnMap(lat, lon) {
+  if (!marker) {
+    marker = new google.maps.Marker({
+      position: { lat: lat, lng: lon },
+      map: map
+    });
+  } else {
+    marker.setPosition({ lat: lat, lng: lon });
   }
+
+  map.setCenter({ lat: lat, lng: lon });
+}
+
+function haversineDistance(lat1, lon1, lat2, lon2) {
+  const R = 6371; // 地球の半径（km）
+  const dLat = (lat2 - lat1) * Math.PI / 180;
+  const dLon = (lon2 - lon1) * Math.PI / 180;
+  const a = Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+            Math.cos(lat1 * Math.PI / 180) * Math.cos(lat2 * Math.PI / 180) *
+            Math.sin(dLon / 2) * Math.sin(dLon / 2);
+  const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+  return R * c; // 距離（km）
+}
+
+function initMap() {
+  map = new google.maps.Map(document.getElementById('map'), {
+    center: { lat: 35.6895, lng: 139.6917 }, // デフォルトで東京
+    zoom: 12
+  });
+}
 </script>

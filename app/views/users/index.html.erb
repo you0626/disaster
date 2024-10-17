@@ -1,6 +1,6 @@
 <main>
-
-    <!-- 災害通知の表示 -->
+  <p class="alert alert-warning">ご新規の方は避難所情報からCSVファイルのダウンロードをお願いします。</p>
+  <!-- 災害通知の表示 -->
     <section class="disaster-notifications">
       <h2>各地災害情報</h2>
       <%= link_to "地震情報", disaster_notifications_path %><br>
@@ -19,7 +19,7 @@
     <% else %>
       <!-- 都道府県か市町村で検索 -->
       <%= form_with url: search_shelters_path, method: :get, local: true do |form| %>
-        <%= form.label :region, "都道府県 or 区市町村" %>
+        <%= form.label :region, "都道府県 or 市区町村" %>
         <%= form.text_field :region %>
         <%= form.submit "検索" %>
       <% end %>
@@ -60,14 +60,6 @@
           <p>備蓄品がありません。</p>
         <% end %>
       </ul>
-    </section>
-  <% end %>
-
-  <!-- 最近のアクティビティ（ログイン時のみ） -->
-  <% if user_signed_in? %>
-    <section class="user-activity">
-      <h2>最近のアクティビティ</h2>
-      <p>最後のログイン: <%= current_user.last_login_at.strftime("%Y年%m月%d日 %H:%M") if current_user.last_login_at %></p>
     </section>
   <% end %>
 
