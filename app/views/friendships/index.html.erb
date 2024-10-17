@@ -1,64 +1,199 @@
-<h1>フレンド管理</h1>
+<h1 class="friend-management-title">フレンド管理</h1>
 
 <!-- フレンド検索フォーム -->
-<%= form_with(url: search_friendships_user_friendships_path(user_id: current_user.id), method: :get, local: true) do |form| %>
+<%= form_with(url: search_friendships_user_friendships_path(user_id: current_user.id), method: :get, local: true, class: "friend-search-form") do |form| %>
   <div>
-    <%= form.label :name, "フレンドを検索" %>
-    <%= form.text_field :name, placeholder: "名前を入力" %>
+    <%= form.label :name, "フレンドを検索", class: "friend-search-label" %>
+    <%= form.text_field :name, placeholder: "名前を入力", class: "friend-search-input" %>
   </div>
   <div>
-    <%= form.submit "検索" %>
+    <%= form.submit "検索", class: "friend-search-button" %>
   </div>
 <% end %>
 
 <!-- 検索結果の表示 -->
 <h2>検索結果</h2>
+<p class="friend-register-warning">※フレンド登録ボタンを押すと相手にメッセージが送信されます。</p>
 <% if @friends.present? %>
-  <ul>
+  <ul class="friend-search-results">
     <% @friends.each do |friend| %>
-      <li>
-        <%= friend.name %> - 最終ログイン: <%= friend.last_login_at %>
-        <%= button_to "フレンド登録", friendships_path(friend_id: friend.id), method: :post, class: "friend-add-link" %>
+      <li class="friend-item">
+        <div class="friend-info">
+          <span class="friend-name"><%= friend.name %> - 最終ログイン: <%= friend.last_login_at %></span>
+          <div class="friend-actions">
+            <% if current_user.friendships.exists?(friend_id: friend.id) %>
+              <p class="already-friend-text">※既にフレンドです</p>
+            <% else %>
+              <%= button_to "フレンド登録", friendships_path(friend_id: friend.id), method: :post, class: "friend-add-button" %>
+            <% end %>
+          </div>
+        </div>
       </li>
     <% end %>
   </ul>
 <% else %>
-  <p>フレンドが見つかりませんでした。</p>
+  <p class="no-search-results">フレンドが見つかりませんでした。</p>
 <% end %>
 
 <!-- フレンドリストの表示 -->
 <h2>フレンド一覧</h2>
 <% if current_user.friends.present? %>
-  <ul>
+  <ul class="friend-list">
     <% current_user.friends.each do |friend| %>
-      <li>
-        <%= friend.name %> - 最終ログイン: <%= friend.last_login_at %>
-        
-        <% friendship = current_user.friendships.find_by(friend_id: friend.id) %>
-        
-        <% if friendship %>
-          <%= button_to "フレンド解除", friendship_path(friendship), method: :delete, class: "friend-remove-link", data: { confirm: "本当にフレンドを解除しますか？" } %>
-        <% else %>
-          <p>フレンドではありません。</p>
-        <% end %>
+      <li class="friend-item">
+        <div class="friend-info">
+          <span class="friend-name"><%= friend.name %> - 最終ログイン: <%= friend.last_login_at %></span>
+          <div class="friend-actions">
+            <% friendship = current_user.friendships.find_by(friend_id: friend.id) %>
+            <% if friendship %>
+              <%= button_to "フレンド解除", friendship_path(friendship), method: :delete, class: "friend-remove-button", data: { confirm: "本当にフレンドを解除しますか？" } %>
+            <% else %>
+              <p class="not-friend-text">フレンドではありません。</p>
+            <% end %>
+          </div>
+        </div>
       </li>
     <% end %>
   </ul>
 <% else %>
-  <p>フレンドがいません。</p>
+  <p class="no-friends">フレンドがいません。</p>
 <% end %>
 
 <h2>メッセージ</h2>
-<%= link_to 'メッセージ一覧', messages_path %>
-<h5>※直近5件のメッセージを表示</h5>
+<%= link_to 'メッセージ一覧へ', messages_path, class: "messages-link" %>
+<h5 class="recent-messages-notice">※直近5件のメッセージを表示</h5>
 <% if @messages.present? %>
-  <ul>
+  <ul class="message-list">
     <% @messages.each do |message| %>
-      <li>
+      <li class="message-item">
         <%= message.sender.name %>: <%= message.content %>
       </li>
     <% end %>
   </ul>
 <% else %>
-  <p>メッセージはありません。</p>
+  <p class="no-messages">メッセージはありません。</p>
 <% end %>
+
+<script>
+  document.addEventListener('turbolinks:load', () => {
+    document.addEventListener('ajax:success', (event) => {
+      const detail = event.detail;
+      if (detail[0] && detail[0].status === 'success') {
+        // 検索結果をクリア
+        document.querySelector('.friend-search-results').innerHTML = '';
+      }
+    });
+  });
+</script>
+
+<style>
+  .friend-management-title {
+    color: blue;
+    text-align: center;
+    text-decoration: underline;
+  }
+
+  .friend-search-form {
+    margin-bottom: 20px;
+  }
+
+  .friend-search-label {
+    font-weight: bold;
+  }
+
+  .friend-search-input {
+    padding: 5px;
+    width: 200px;
+  }
+
+  .friend-search-button {
+    padding: 5px 10px;
+    background-color: #007BFF;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+  }
+
+  .friend-search-button:hover {
+    background-color: #0056b3;
+  }
+
+  .friend-item {
+    margin-bottom: 10px;
+  }
+
+  .friend-info {
+    display: flex;
+    align-items: center; /* Align items vertically */
+  }
+
+  .friend-name {
+    flex: 1; /* Allow the name to take available space */
+  }
+
+  .friend-actions {
+    display: flex;
+    align-items: center; /* Align buttons and text vertically */
+    justify-content: center; /* Center actions within the div */
+    margin-left: 10px; /* Space between name and actions */
+    margin-top: 20px;
+  }
+
+  .friend-add-button,
+  .friend-remove-button {
+    background-color: blue;
+    color: white;
+    border: none;
+    padding: 3px 8px;
+    border-radius: 5px;
+    font-size: 14px;
+    cursor: pointer;
+  }
+
+  .friend-add-button:hover {
+    background-color: darkblue;
+  }
+
+  .friend-remove-button {
+    background-color: red;
+  }
+
+  .friend-remove-button:hover {
+    background-color: darkred;
+  }
+
+  .already-friend-text {
+    font-weight: bold; /* 太字にする */
+    margin-left: 10px; /* Aligns with the buttons */
+    margin-top: 15px;
+  }
+
+  .no-search-results,
+  .no-friends,
+  .no-messages {
+    margin-left: 50px;
+  }
+
+  .messages-link {
+    text-decoration: underline;
+    color: blue;
+  }
+
+  .message-item {
+    margin-bottom: 5px;
+  }
+
+  .recent-messages-notice {
+    margin-left: 40px;
+    color: red;
+  }
+
+  .friend-register-warning {
+    color: red; /* 注意を引くために赤色 */
+    font-weight: bold; /* 太字 */
+    margin-bottom: 10px; /* 下にスペースを追加 */
+    margin-left: 40px;
+  }
+
+</style>

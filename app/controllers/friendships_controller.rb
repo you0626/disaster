@@ -18,6 +18,7 @@ class FriendshipsController < ApplicationController
 
   def create
     @friendship = Friendship.new(friendship_params)
+    @friendship = current_user.friendships.build(friend_id: params[:friend_id])
     
     if @friendship.save
       # フレンド登録成功時にメッセージを送信
