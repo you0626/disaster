@@ -4,7 +4,7 @@ class WeatherNotificationsController < ApplicationController
 
   def index
     # fetched_atで降順に並べた後、地方ごとにグループ化
-    @weather_notifications = WeatherNotification.all.order(fetched_at: :desc)
+    @weather_notifications = WeatherNotification.all.order(fetched_at: :asc)
     @grouped_notifications = @weather_notifications.group_by { |notification| notification.title }
   end
 
