@@ -1,0 +1,2 @@
+module PreparednessManualHelper
+end

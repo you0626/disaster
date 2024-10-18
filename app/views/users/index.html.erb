@@ -1,5 +1,5 @@
 <main>
-  <p class="alert alert-warning">※ご新規の方は避難所情報からCSVファイルのダウンロードをお願いします。</p>
+  <p class="alert alert-warning">※新規登録された方は避難所情報からCSVファイルのダウンロードをお願いします。</p>
   <!-- 災害通知の表示 -->
     <section class="disaster-notifications">
       <h2>各地災害情報</h2>
@@ -66,8 +66,12 @@
   <!-- 災害マニュアル -->
   <section class="manual">
     <h2>災害マニュアル</h2>
-    <%= link_to '地震マニュアル', earthquake_manual_index_path %><br>
-    <%= link_to '台風マニュアル', typhoon_manual_index_path %><br>
+    <%= link_to '日頃からできる備えについてのマニュアル', preparedness_manual_index_path %><br>
+    <%= link_to '地震についてのマニュアル', earthquake_manual_index_path %><br>
+    <%= link_to '台風についてのマニュアル', typhoon_manual_index_path %><br>
+    <%= link_to '避難所生活についてのマニュアル', shelter_manual_index_path %><br>
+    <%= link_to '避難時の怪我についてのマニュアル', injury_manual_index_path %><br>
+    <%= link_to '備蓄品についてのマニュアル', emergncy_supplies_manual_index_path %><br>
   </section>
 </main>
 
