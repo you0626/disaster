@@ -1,22 +1,128 @@
+<!-- メッセージの新規作成リンク -->
+<div class="create-message-container">
+  <%= link_to '新しいメッセージを作成する', new_message_path, class: "btn create-message-link" %>
+</div>
 
-<!-- メッセージの新規作成リンクを追加 -->
-<%= link_to '新しいメッセージを作成', new_message_path, class: "btn btn-sm btn-success" %>
+<h2 class="message-list-title">メッセージ一覧</h2>
+<h4 class="message-warning">※過去100件を表示してます。それより前のメッセージは自動で削除されます。</h4>
 
-<h2>メッセージ一覧</h2>
-<h4>※過去100件を表示してます。それより前のメッセージは自動で削除されます。</h4>
-<ul>
+<ul class="message-list">
   <% @messages.each do |message| %>
-    <li>
-      <strong>送信者: <%= User.find(message.sender_id).name %></strong>
-      <strong>宛先: <%= User.find(message.recipient_id).name %></strong>
-      <p>メッセージ: <%= message.content %></p>
-      <em>投稿時間: <%= message.created_at.strftime("%Y-%m-%d %H:%M") %></em>
+    <li class="message-item">
+      <div class="message-info">
+        <p class="message-sender"><strong>送信者:</strong> <%= User.find(message.sender_id).name %></p>
+        <p class="message-recipient"><strong>受信者:</strong> <%= User.find(message.recipient_id).name %></p>
+        <p class="message-time"><strong>投稿時間:</strong> <%= message.created_at.strftime("%Y-%m-%d %H:%M") %></p>
+        <p class="message-content"><strong>メッセージ:</strong> <%= message.content %></p>
+      </div>
 
-      <!-- メッセージの送信者が現在のユーザーであれば、編集と削除リンクを表示 -->
-      <% if message.sender_id == current_user.id %>
-        <%= link_to '編集', edit_message_path(message), class: "btn btn-sm btn-primary" %>
-        <%= button_to "削除", message_path(message), method: :delete, data: { confirm: "本当に削除しますか？" }, class: "btn btn-sm btn-primary" %>
-      <% end %>
+      <!-- 編集・削除リンク -->
+      <div class="message-actions">
+        <% if message.sender_id == current_user.id %>
+          <%= link_to '編集', edit_message_path(message), class: "btn-edit" %>
+          <%= button_to "削除", message_path(message), method: :delete, data: { confirm: "本当に削除しますか？" }, class: "btn-delete" %>
+        <% end %>
+      </div>
     </li>
   <% end %>
 </ul>
+
+<style>
+  .create-message-container {
+    text-align: center; /* 中央に配置 */
+    margin-bottom: 20px;
+    margin-top: 20px;
+  }
+
+  .create-message-link {
+    display: inline-block;
+    padding: 10px;
+    background-color: green;
+    color: white;
+    border-radius: 5px;
+    text-decoration: none;
+    font-size: 18px;
+  }
+
+  .message-list-title {
+    font-size: 24px;
+    color: blue;
+    text-decoration: underline;
+  }
+
+  .message-warning {
+    margin-left: 20px;
+    color: red;
+  }
+
+  .message-list {
+    list-style-type: none;
+    padding: 0;
+  }
+
+  .message-item {
+    border: 1px solid #ccc;
+    padding: 10px;
+    margin-bottom: 10px;
+    display: flex;
+    justify-content: space-between;
+  }
+
+  .message-info {
+    flex: 1;
+  }
+
+  .message-sender,
+  .message-recipient,
+  .message-content,
+  .message-time {
+    margin-bottom: 5px;
+    font-weight: bold; /* Set all text to bold */
+    margin-left: 10px;
+  }
+
+  .message-actions {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: flex-end;
+    margin-left: 20px;
+  }
+
+  .btn-edit{
+    background-color: red;
+    color: white;
+    padding: 5px 10px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    width: 80px; /* Ensures uniform button size */
+    text-align: center;
+    margin-bottom: 5px;
+    margin-right: 12px;
+  }
+
+  .btn-delete {
+    background-color: red;
+    color: white;
+    padding: 5px 10px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    width: 80px; /* Ensures uniform button size */
+    text-align: center;
+    margin-bottom: 5px;
+  }
+
+  .btn-edit {
+    background-color: blue;
+  }
+
+  .btn-edit:hover {
+    background-color: darkblue;
+  }
+
+  .btn-delete:hover {
+    background-color: darkred;
+  }
+</style>
