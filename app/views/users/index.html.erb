@@ -1,5 +1,5 @@
 <main>
-  <p class="alert alert-warning">ご新規の方は避難所情報からCSVファイルのダウンロードをお願いします。</p>
+  <p class="alert alert-warning">※ご新規の方は避難所情報からCSVファイルのダウンロードをお願いします。</p>
   <!-- 災害通知の表示 -->
     <section class="disaster-notifications">
       <h2>各地災害情報</h2>
@@ -9,10 +9,10 @@
 
   <!-- 避難所検索 -->
   <section class="search-shelter">
-    <h2>避難所検索</h2>
+    <h2>一番近い避難所</h2>
     <% if user_signed_in? %>
       <!-- 現在地から検索ボタン -->
-      <button id="search-shelter-button">現在地がら一番近い避難所を表示</button>
+      <button id="search-shelter-button" class="centered-button" >現在地がら一番近い避難所を表示</button>
       <div id="shelter-list"></div>
       <!-- マップを表示するためのdivを追加 -->
       <div id="map" style="width: 100%; height: 400px;"></div>

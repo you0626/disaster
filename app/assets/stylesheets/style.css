@@ -15,7 +15,7 @@ header {
 }
 
 .logo {
-  font-size: 24px; /* ロゴのフォントサイズ */
+  font-size: 40px; /* ロゴのフォントサイズ */
 }
 
 .logo a {
@@ -141,56 +141,28 @@ a:hover {
 /* ユーザー名 */
 .welcome-message {
   text-align: center; /* テキストを中央揃え */
-  font-size: 20px; /* フォントサイズを大きく */
+  font-size: 23px; /* フォントサイズを大きく */
   font-weight: bold; /* 太字にする */
-  margin: 10px 0; /* 上下のマージンを追加 */
-  color: skyblue;
-  text-decoration: underline;
+  color: blue;
+  margin-bottom: 10px;
+  margin-right: 50px;
+}
+
+.centered-button {
+  display: block; /* ブロック要素にする */
+  margin: 0 auto; /* 自動で左右のマージンを設定 */
+  width: 30%; /* ボタンの幅を設定（必要に応じて調整） */
+  background-color: blue; /* ボタンの背景色を青に設定 */
+  color: white; /* ボタンの文字色を白に設定 */
+  border: none; /* ボーダーをなしに設定 */
+  padding: 10px; /* パディングを設定 */
+  font-size: 16px; /* フォントサイズを設定 */
+  cursor: pointer; /* カーソルをポインターに設定 */
+}
+
+/* ボタンにホバー時のスタイルを追加（任意） */
+.centered-button:hover {
+  background-color: darkblue; /* ホバー時の背景色を変更 */
 }
 
 
-.supply-item {
-  font-size: 20px; /* 重要なスタイルとして適用 */
-  display: flex;
-  align-items: center;
-}
-
-/* フレンド登録ボタンの周りの余計な四角をなくす */
-.friend-register-button {
-  border: none; /* ボーダーをなくす */
-  background-color: #007bff; /* ボタンの色 */
-  color: white; /* 文字の色 */
-  padding: 5px 10px; /* パディングで余白を調整 */
-  cursor: pointer;
-}
-
-.friend-register-button:hover {
-  background-color: #0056b3; /* ホバー時の色 */
-}
-
-/* フレンド名とボタンを横並びにする */
-li {
-  display: flex;
-  justify-content: space-between;
-  margin-bottom: 10px; /* 下に少し余白を追加 */
-}
-
-span {
-  margin-right: 10px; /* 名前とボタンの間に余白を追加 */
-}
-
-.friend-remove-link {
-  background-color: red; /* 赤色に設定 */
-  color: white;          /* 文字色を白に設定 */
-  border: none;         /* 枠線を無くす */
-  padding: 10px 20px;   /* パディングを設定 */
-  text-align: center;    /* テキストを中央に配置 */
-  text-decoration: none;  /* 下線を無くす */
-  display: inline-block;  /* インラインブロック表示 */
-  border-radius: 5px;    /* 角を丸くする */
-  cursor: pointer;        /* カーソルをポインターに変更 */
-}
-
-.friend-remove-link:hover {
-  background-color: darkred; /* ホバー時に色を変更 */
-}
