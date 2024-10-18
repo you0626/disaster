@@ -5,6 +5,14 @@ Rails.application.routes.draw do
   # earthquake_manual_path へのルート
   get 'earthquake_manual/index', to: 'earthquake_manual#index', as: 'earthquake_manual_index'
 
+  get 'shelter_manual/index', to: 'shelter_manual#index', as: 'shelter_manual_index'
+
+  get 'injury_manual/index', to: 'injury_manual#index', as: 'injury_manual_index'
+
+  get 'emergncy_supplies_manual/index', to: 'emergncy_supplies_manual#index', as: 'emergncy_supplies_manual_index'
+
+  get 'preparedness_manual/index', to: 'preparedness_manual#index', as: 'preparedness_manual_index'
+
   devise_for :users, controllers: { sessions: 'users/sessions' }
   devise_scope :user do
     get '/users/sign_out' => 'devise/sessions#destroy'
@@ -36,6 +44,10 @@ Rails.application.routes.draw do
     collection do
       get 'earthquake'
       get 'typhoon'
+      get 'shelter'
+      get 'injury'
+      get 'emergncy_supplies'
+      get 'preparedness'
     end
   end
 
