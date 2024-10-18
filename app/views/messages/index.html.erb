@@ -1,18 +1,16 @@
 <!-- メッセージの新規作成リンク -->
-<div class="create-message-container">
-  <%= link_to '新しいメッセージを作成する', new_message_path, class: "btn create-message-link" %>
-</div>
-
-<h2 class="message-list-title">メッセージ一覧</h2>
-<h4 class="message-warning">※過去100件を表示してます。それより前のメッセージは自動で削除されます。</h4>
-
 <ul class="message-list">
-  <% @messages.each do |message| %>
+  <% @messages.order(updated_at: :desc).each do |message| %> <!-- updated_at順に並び替え -->
     <li class="message-item">
       <div class="message-info">
         <p class="message-sender"><strong>送信者:</strong> <%= User.find(message.sender_id).name %></p>
         <p class="message-recipient"><strong>受信者:</strong> <%= User.find(message.recipient_id).name %></p>
-        <p class="message-time"><strong>投稿時間:</strong> <%= message.created_at.strftime("%Y-%m-%d %H:%M") %></p>
+        <p class="message-time">
+          <strong>投稿時間:</strong> <%= message.created_at.strftime("%Y-%m-%d %H:%M") %>
+          <% if message.updated_at != message.created_at %>
+            <br><strong>更新時間:</strong> <%= message.updated_at.strftime("%Y-%m-%d %H:%M") %>
+          <% end %>
+        </p>
         <p class="message-content"><strong>メッセージ:</strong> <%= message.content %></p>
       </div>
 
@@ -26,6 +24,7 @@
     </li>
   <% end %>
 </ul>
+
 
 <style>
   .create-message-container {

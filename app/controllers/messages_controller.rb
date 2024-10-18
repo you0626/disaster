@@ -1,22 +1,17 @@
 class MessagesController < ApplicationController
   before_action :set_message, only: [:edit, :update, :destroy]
 
-  # メッセージ一覧表示 (最新5件)
+  # メッセージ一覧表示 (最新100件)
   def index
-    @messages = Message.where(recipient_id: current_user.id).includes(:sender)
-    @received_messages = Message.where(recipient_id: current_user.id).order(created_at: :desc)
-    @sent_messages = Message.where(sender_id: current_user.id).order(created_at: :desc)
-
-    # 自分が送信者または受信者のメッセージを取得し、最新100件を表示
     @messages = Message.where("sender_id = ? OR recipient_id = ?", current_user.id, current_user.id)
-                       .order(created_at: :desc)
+                       .order(updated_at: :desc)
                        .limit(100)
 
     # 101件目以降の古いメッセージを削除
     Message.where("sender_id = ? OR recipient_id = ?", current_user.id, current_user.id)
-           .order(created_at: :desc)
+           .order(updated_at: :desc)
            .offset(100)
-           .destroy_all
+           .delete_all  # destroy_all から delete_all へ変更
   end
 
   def new

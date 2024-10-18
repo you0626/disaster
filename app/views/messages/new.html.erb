@@ -1,13 +1,77 @@
+<h2 class="form-title">新規メッセージ作成</h2>
+
 <%= form_with model: @message, local: true do |f| %>
   <div class="form-group">
-    <%= f.label :recipient_id, "送信相手" %>
-    <%= f.collection_select :recipient_id, current_user.friends, :id, :name, prompt: "送信相手を選択" %>
+    <%= f.label :recipient_id, "送信相手", class: "form-label" %>
+    <%= f.collection_select :recipient_id, current_user.friends, :id, :name, prompt: "送信相手を選択", class: "form-select" %>
   </div>
   
   <div class="form-group">
-    <%= f.label :content, "メッセージ" %>
-    <%= f.text_area :content, rows: 5 %>
+    <%= f.label :content, "メッセージ", class: "form-label" %>
+    <%= f.text_area :content, rows: 5, class: "form-textarea" %>
+    <p class="form-note">※最大200文字まで入力できます。</p>
   </div>
   
-  <%= f.submit "送信", class: "btn btn-primary" %>
+  <%= f.submit "送信", class: "btn btn-primary submit-button" %>
 <% end %>
+
+<style>
+  /* タイトルのスタイル */
+  .form-title {
+    font-size: 24px;
+    text-align: center;
+    margin-bottom: 20px;
+    color: blue;
+    text-decoration: underline;
+  }
+
+  /* フォーム全体のスタイル */
+  .form-group {
+    margin-bottom: 15px;
+    margin-left: 10px; /* 左右に同じマージンを設定 */
+    margin-right: 10px;
+  }
+
+  .form-label {
+    font-weight: bold;
+    margin-bottom: 5px;
+    display: block;
+  }
+
+  .form-select, .form-textarea {
+    width: calc(100% - 20px); /* 左右のマージンを考慮した幅 */
+    padding: 10px;
+    font-size: 16px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+  }
+
+  .form-textarea {
+    resize: vertical;
+  }
+
+  .form-note {
+    font-size: 12px;
+    color: red;
+    margin-top: 5px;
+  }
+
+  /* 送信ボタンのスタイル */
+  .submit-button {
+    display: block;
+    width: auto; /* ボタンの幅を自動に変更 */
+    padding: 10px 20px; /* 横幅の余白を適度に調整 */
+    margin-left: auto;
+    margin-right: auto; /* ボタンを中央に配置 */
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    font-size: 16px;
+    cursor: pointer;
+  }
+
+  .submit-button:hover {
+    background-color: #0056b3;
+  }
+</style>
