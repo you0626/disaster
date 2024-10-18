@@ -1,4 +1,5 @@
 Rails.application.routes.draw do
+  get 'support/index', to: 'support#index', as: 'support_index'
   # typhoon_manual_path へのルート
   get 'typhoon_manual/index', to: 'typhoon_manual#index', as: 'typhoon_manual_index'
   
