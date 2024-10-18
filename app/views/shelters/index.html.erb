@@ -1,24 +1,134 @@
-<h1 style="text-align: center; color: blue; text-decoration: underline;">避難所一覧</h1>
+<h1 class="shelter-title">避難所一覧</h1>
 
-<a href="<%= download_shelters_path %>" style="font-size: 1.2em;">CSVダウンロード　(更新日時: 2024年10月17日)</a>
+<a href="<%= download_shelters_path %>" class="csv-download-link">
+  CSVダウンロード　(更新日時: 2024年10月17日)
+</a>
+
+<!-- 注意書きを追加 -->
+<p class="data-update-notice">
+  データが更新された場合は、最新の情報をダウンロードしてください。
+</p>
 
 <!-- 検索フォームを追加 -->
-<form id="shelter-search-form">
+<form id="shelter-search-form" class="search-form">
   <label for="search-region">都道府県 or 市区町村</label>
   <input type="text" id="search-region" name="region" placeholder="例: 東京都, 渋谷区">
   <button type="submit">検索</button>
 </form>
 
-<div style="text-align: center; margin-top: 50px;">
-  <button id="show-nearby-shelters">近くの避難所を表示</button>
-  <span style="margin-left: 10px;">自動で近くの避難所を3件表示します。</span>
+<div class="nearby-shelters">
+  <button id="show-nearby-shelters" class="show-nearby-button">
+    近くの避難所を表示
+  </button>
+  <span class="nearby-message">←クリックで近くの避難所を3件表示します。</span>
 </div>
 
 <!-- 検索結果を少し下に、右に配置 -->
-<div id="shelter-list" style="margin-top: 30px; margin-left: 50px;"></div>
+<div id="shelter-list" class="shelter-list">
+  <h2>検索結果の表示リスト</h2>
+  <p class="result-message">※現在地から近い順に表示されます。クリックするとマップが表示されます。</p>
+</div>
 
 <!-- 地図を少し下に配置 -->
-<div id="map" style="width: 100%; height: 400px; margin-top: 50px;"></div>
+<div id="map" class="map"></div>
+
+<style>
+  /* タイトルスタイル */
+  .shelter-title {
+    text-align: center;  /* 中央揃え */
+    color: blue;  /* 青色 */
+    text-decoration: underline;  /* 下線 */
+  }
+
+  /* CSVダウンロードリンクスタイル */
+  .csv-download-link {
+    font-size: 1.2em;  /* フォントサイズ */
+    color: #007BFF;  /* リンク色 */
+    text-decoration: none;  /* 下線なし */
+    display: block;  /* ブロック表示 */
+    text-align: center;  /* 中央揃え */
+    margin: 10px 0;  /* 上下のマージン */
+  }
+
+  /* データ更新注意書きスタイル */
+  .data-update-notice {
+    text-align: center;  /* 中央揃え */
+    color: red;  /* 赤色 */
+    margin: 10px 0;  /* 上下のマージン */
+  }
+
+  /* 検索フォームスタイル */
+  .search-form {
+    max-width: 400px;  /* 最大幅400px */
+    margin: 20px auto;  /* 上下のマージン、自動中央揃え */
+    padding: 20px;  /* 内側のパディング */
+    border: 1px solid #ccc;  /* ボーダー */
+    border-radius: 5px;  /* 角を丸める */
+    background-color: #f9f9f9;  /* 背景色 */
+    line-height: 1.6;  /* 行間の調整 */
+  }
+
+  /* 検索ボタンスタイル */
+  .search-form button {
+    width: 30%;  /* 幅30% */
+    background-color: green;  /* 緑色背景 */
+    color: white;  /* 白文字 */
+    padding: 10px;  /* 内側のパディング */
+    border: none;  /* ボーダーなし */
+    border-radius: 5px;  /* 角を丸める */
+    cursor: pointer;  /* ポインタカーソル */
+    display: block;  /* ブロック表示 */
+    margin: 10px auto;  /* 上下のマージン、自動中央揃え */
+  }
+
+  /* 近くの避難所ボタンエリアスタイル */
+  .nearby-shelters {
+    text-align: center;  /* 中央揃え */
+    margin-top: 50px;  /* 上のマージン */
+  }
+
+  /* 近くの避難所表示ボタンスタイル */
+  .show-nearby-button {
+    background-color: blue;  /* 青色背景 */
+    color: white;  /* 白文字 */
+    padding: 10px 20px;  /* 内側のパディング */
+    border: none;  /* ボーダーなし */
+    border-radius: 5px;  /* 角を丸める */
+    cursor: pointer;  /* ポインタカーソル */
+  }
+
+  /* 近くの避難所メッセージスタイル */
+  .nearby-message {
+    margin-left: 10px;  /* 左のマージン */
+    color: red;  /* 赤色 */
+  }
+
+  /* 検索結果リストスタイル */
+  .shelter-list {
+    margin-top: 30px;  /* 上のマージン */
+    text-align: center;  /* 中央揃え */
+  }
+
+  /* 検索結果のメッセージスタイル */
+  .result-message {
+    color: red;  /* 赤色 */
+  }
+
+  /* 地図スタイル */
+  .map {
+    width: 100%;  /* 幅100% */
+    height: 400px;  /* 高さ400px */
+    margin-top: 50px;  /* 上のマージン */
+  }
+
+  .red-text {
+    color: red; /* 赤色のテキスト */
+  }
+  .black-text {
+    color: black; /* 黒色のテキスト */
+  }
+</style>
+
 
 
 <script>
@@ -99,10 +209,21 @@ function parseCSV(data) {
 
 function displayShelters(shelters, userLat, userLon) {
   const shelterList = document.getElementById('shelter-list');
-  shelterList.innerHTML = '';
+  shelterList.innerHTML = ''; // 既存の内容をクリア
+  
+  // 検索結果の見出しを追加
+  const header = document.createElement('h2');
+  header.textContent = '検索結果の表示リスト';
+  shelterList.appendChild(header);
+  
+  // 説明文を追加
+  const description = document.createElement('p');
+  description.textContent = '※現在地から近い順に表示されてます。クリックするとマップが表示されます。';
+  description.classList.add('red-text'); // 赤色のクラスを追加
+  shelterList.appendChild(description);
 
   if (shelters.length === 0) {
-    shelterList.textContent = '該当する避難所が見つかりませんでした。';
+    shelterList.textContent += '該当する避難所が見つかりませんでした。';
     return;
   }
 
@@ -117,7 +238,7 @@ function displayShelters(shelters, userLat, userLon) {
                      '距離情報なし';
 
     // 表示形式を変更
-    shelterItem.textContent = `施設名：${shelter['施設・場所名']}　/　住所：${shelter['住所']} (距離: ${distance} km)`;
+    shelterItem.textContent = `● 施設名：${shelter['施設・場所名']}　/　住所：${shelter['住所']} (距離: ${distance} km)`;
 
     shelterItem.addEventListener('click', function() {
       showShelterOnMap(lat, lon);
