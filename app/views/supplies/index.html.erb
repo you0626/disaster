@@ -1,53 +1,155 @@
-<h1>必要な物リスト</h1>
+<h1 class="title">必要な物リスト</h1>
 <%= form_with model: @new_required_item, url: supplies_path, local: true do |f| %>
-  <div>
+  <div class="form-group">
     <%= f.label :name, "必要な物の名前" %>
-    <%= f.text_field :name %>
+    <%= f.text_field :name, class: 'input-field' %>
   </div>
-  <div>
+  <div class="form-group">
     <%= f.label :quantity, "数量" %>
-    <%= f.number_field :quantity %>
+    <%= f.number_field :quantity, class: 'input-field' %>
   </div>
   <%= f.hidden_field :type, value: 'required_item' %>
-  <%= f.submit "追加" %>
+  <%= f.submit "追加", class: 'btn-add' %>
 <% end %>
 
-<ul>
+<ul class="supply-list">
   <% @necessary_supplies.each do |supply| %>
     <li class="supply-item">
-      <div style="display: flex; align-items: center;">
-        <span><%= supply.name %> - <%= supply.quantity %></span>
+      <div class="supply-info">
+        <span class="supply-name">商品名：<%= supply.name %> / 個数：<%= supply.quantity %></span>
+        <% if supply.expiration_date %>
+          <span class="supply-expiration">期限：<%= supply.expiration_date %></span>
+        <% end %>
         <%= button_to '削除', supply_path(supply), method: :delete, data: { confirm: '本当に削除しますか？' }, class: 'btn-delete' %>
       </div>
     </li>
   <% end %>
 </ul>
 
-<h1>備蓄品リスト</h1>
+<hr class="divider"> <!-- 線を追加 -->
+
+<h1 class="title">備蓄品リスト</h1>
 <%= form_with model: @new_supply, url: supplies_path, local: true do |f| %>
-  <div>
+  <div class="form-group">
     <%= f.label :name, "備蓄品の名前" %>
-    <%= f.text_field :name %>
+    <%= f.text_field :name, class: 'input-field' %>
   </div>
-  <div>
+  <div class="form-group">
     <%= f.label :quantity, "数量" %>
-    <%= f.number_field :quantity %>
+    <%= f.number_field :quantity, class: 'input-field' %>
   </div>
-  <div>
+  <div class="form-group">
     <%= f.label :expiration_date, "期限" %>
-    <%= f.date_field :expiration_date %>
+    <%= f.date_field :expiration_date, class: 'input-field' %>
   </div>
   <%= f.hidden_field :type, value: 'stock' %>
-  <%= f.submit "追加" %>
+  <%= f.submit "追加", class: 'btn-add' %>
 <% end %>
 
-<ul>
+<ul class="supply-list">
   <% @stock_supplies.each do |supply| %>
     <li class="supply-item">
-      <div style="display: flex; align-items: center;">
-        <span><%= supply.name %> - <%= supply.quantity %> (期限: <%= supply.expiration_date || 'なし' %>)</span>
+      <div class="supply-info">
+        <span class="supply-name">商品名：<%= supply.name %> / 個数：<%= supply.quantity %></span>
+        <span class="supply-expiration">期限：<%= supply.expiration_date || 'なし' %></span>
         <%= button_to '削除', supply_path(supply), method: :delete, data: { confirm: '本当に削除しますか？' }, class: 'btn-delete' %>
       </div>
     </li>
   <% end %>
 </ul>
+
+<style>
+  h1.title {
+    font-size: 24px; /* タイトルのフォントサイズを設定 */
+    color: blue; /* タイトルの文字色を青に設定 */
+    text-decoration: underline; /* タイトルに下線を追加 */
+    text-align: center; /* タイトルを中央配置 */
+    margin-bottom: 20px; /* タイトルの下にマージンを追加 */
+  }
+
+  .form-group {
+    margin-bottom: 10px; /* フォームグループの下のマージンを狭くする */
+  }
+
+  .input-field {
+    width: calc(100% - 20px); /* フィールドの幅を全体の幅からマージンを引いて設定 */
+    padding: 10px; /* フィールド内のパディングを設定 */
+    border: 1px solid #ccc; /* フィールドの境界線を設定 */
+    border-radius: 5px; /* フィールドの角を丸める */
+    font-size: 16px; /* フィールド内のフォントサイズを設定 */
+    margin-right: 10px; /* フィールドの右側にマージンを追加 */
+  }
+
+  .btn-add {
+    background-color: green; /* 追加ボタンの背景色を緑に設定 */
+    color: white; /* 追加ボタンの文字色を白に設定 */
+    padding: 10px 15px; /* 追加ボタンの内側のパディングを設定 */
+    border: none; /* 追加ボタンの境界線を無くす */
+    border-radius: 5px; /* 追加ボタンの角を丸める */
+    cursor: pointer; /* ボタンのカーソルをポインターに設定 */
+    font-size: 16px; /* 追加ボタンのフォントサイズを設定 */
+    margin-top: 10px; /* ボタンの上にマージンを追加 */
+  }
+
+  .supply-list {
+    list-style-type: none; /* リストのスタイルを無効化 */
+    padding: 0; /* リストの内側のパディングを無くす */
+    text-align: center; /* リストを中央配置 */
+  }
+
+  .supply-item {
+    display: flex; /* フレックスボックスを利用 */
+    flex-direction: column; /* 縦並びに設定 */
+    align-items: center; /* 中央配置 */
+    border: 1px solid #ddd; /* 商品エリアの境界線を設定 */
+    padding: 10px; /* 商品エリアの内側のパディングを設定 */
+    margin-bottom: 5px; /* 各商品の間隔を狭く設定 */
+    border-radius: 5px; /* 商品エリアの角を丸める */
+    background-color: #f9f9f9; /* 商品エリアの背景色を設定 */
+    max-width: 500px; /* 商品エリアの最大幅を設定（横長に調整） */
+    margin-left: auto; /* 左右のマージンを自動にして中央配置 */
+    margin-right: auto; /* 同上 */
+  }
+
+  .supply-name {
+    font-weight: bold; /* 商品名を太字に設定 */
+    margin-bottom: 3px; /* 商品名と期限、削除ボタンの間にスペースを追加 */
+  }
+
+  .supply-expiration {
+    font-size: 16px; /* 期限のフォントサイズを調整 */
+  }
+
+  .supply-info {
+    display: flex; /* フレックスボックスを利用 */
+    flex-direction: column; /* 縦並びに設定 */
+    align-items: center; /* 中央配置 */
+    width: 100%; /* 横幅を100%に設定 */
+  }
+
+  .btn-delete {
+    background-color: red; /* 削除ボタンの背景色を赤に設定 */
+    color: white; /* 削除ボタンの文字色を白に設定 */
+    padding: 7px 15px; /* 削除ボタンの内側のパディングを設定 */
+    border: none; /* 削除ボタンの境界線を無くす */
+    border-radius: 5px; /* 削除ボタンの角を丸める */
+    cursor: pointer; /* ボタンのカーソルをポインターに設定 */
+    text-align: center; /* ボタンのテキストを中央配置 */
+    max-width: 80px; /* ボタンの最大幅を設定 */
+  }
+
+  .btn-delete:hover {
+    background-color: darkred; /* 削除ボタンにホバーした時の背景色を設定 */
+  }
+
+  .btn-add:hover {
+    background-color: darkgreen; /* 追加ボタンにホバーした時の背景色を設定 */
+  }
+
+  .divider {
+    border: none; /* 線のスタイルを設定 */
+    height: 3px; /* 線の高さを設定 */
+    background-color: orange; /* 線の色をオレンジに設定 */
+    margin: 20px 0; /* 線の上下マージンを設定 */
+  }
+</style>

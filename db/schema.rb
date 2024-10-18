@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2024_10_14_054444) do
+ActiveRecord::Schema[7.0].define(version: 2024_10_16_191643) do
   create_table "active_storage_attachments", charset: "utf8mb3", force: :cascade do |t|
     t.string "name", null: false
     t.string "record_type", null: false
@@ -47,6 +47,11 @@ ActiveRecord::Schema[7.0].define(version: 2024_10_14_054444) do
     t.float "latitude"
     t.float "longitude"
     t.string "category"
+    t.string "title"
+    t.datetime "occurred_at"
+    t.float "magnitude"
+    t.string "max_intensity"
+    t.string "location"
     t.index ["user_id"], name: "index_disaster_notifications_on_user_id"
   end
 
@@ -120,6 +125,15 @@ ActiveRecord::Schema[7.0].define(version: 2024_10_14_054444) do
     t.float "longitude"
     t.index ["email"], name: "index_users_on_email", unique: true
     t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
+  end
+
+  create_table "weather_notifications", charset: "utf8mb3", force: :cascade do |t|
+    t.string "title"
+    t.text "content"
+    t.datetime "fetched_at"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.string "region"
   end
 
   add_foreign_key "active_storage_attachments", "active_storage_blobs", column: "blob_id"

@@ -17,19 +17,28 @@ class FriendshipsController < ApplicationController
   end
 
   def create
-    @friendship = Friendship.new(user_id: current_user.id, friend_id: params[:friend_id])
-  
+    @friendship = Friendship.new(friendship_params)
+    @friendship = current_user.friendships.build(friend_id: params[:friend_id])
+    
     if @friendship.save
-      # フレンド登録成功時のメッセージ
-      @messages = Friendship.where(friend_id: current_user.id).map do |friendship|
-        "#{User.find(friendship.user_id).name}さんがあなたをフレンド登録しました。"
-      end
-      redirect_to user_friendships_path(current_user)
+      # フレンド登録成功時にメッセージを送信
+      Message.create(
+        sender_id: current_user.id,
+        recipient_id: @friendship.friend_id, # フレンド登録された相手のID
+        content: "#{current_user.name}さんからフレンド登録されました"
+      )
+      
+      redirect_to friendships_path, notice: 'フレンド登録が完了しました。'
     else
-      flash[:alert] = "フレンド登録に失敗しました。"
-      redirect_to user_friendships_path(current_user)
+      flash.now[:alert] = "フレンド登録に失敗しました。"
+      # 失敗した場合はindexを再表示
+      @friends = current_user.friends
+      @search_results = []
+      @messages = Message.where(recipient_id: current_user.id).order(created_at: :desc).limit(5)
+      render :index
     end
   end
+
 
   def destroy
     friendship = Friendship.find(params[:id])
@@ -61,6 +70,6 @@ class FriendshipsController < ApplicationController
   private
 
   def friendship_params
-    params.require(:friendship).permit(:friend_id) # friend_idは友達のユーザーIDを指すと仮定
+    params.permit(:friend_id).merge(user_id: current_user.id) # friend_idは友達のユーザーIDを指すと仮定
   end
 end
