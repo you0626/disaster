@@ -7,7 +7,8 @@ class UsersController < ApplicationController
     @users = User.all
     if user_signed_in?
       @necessary_supplies = current_user.supplies.where(category: 'necessary').order(:name) # 必要な物
-      @stock_supplies = current_user.supplies.where(category: 'stock').order(:expiration_date) # 備蓄品
+      @stock_supplies = Supply.where(category: 'stock').order('expiration_date ASC')
+      @no_expiration_supplies = Supply.where(category: 'stock', expiration_date: nil)
       
       if current_user.latitude && current_user.longitude
         @nearby_notifications = DisasterNotification.near([current_user.latitude, current_user.longitude], 50) # 半径50km以内の通知

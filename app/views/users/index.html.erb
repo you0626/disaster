@@ -48,12 +48,27 @@
       <ul>
         <% if @stock_supplies.present? %>
           <% @stock_supplies.each do |supply| %>
-            <li>
-              <%= supply.name %> (賞味期限: <%= supply.expiration_date.strftime("%Y年%m月%d日") if supply.expiration_date %>)
-            </li>
+            <% if supply.expiration_date.present? %>
+              <li>
+                <%= supply.name %> ( 個数: <%= supply.quantity %> / 賞味期限: <%= supply.expiration_date.strftime("%Y年%m月%d日") %> )
+              </li>
+            <% end %>
           <% end %>
         <% else %>
           <p>備蓄品がありません。</p>
+        <% end %>
+      </ul>
+
+      <h2>期限のない備蓄品</h2>
+      <ul>
+        <% if @no_expiration_supplies.present? %>
+          <% @no_expiration_supplies.each do |supply| %>
+            <li>
+              <%= supply.name %> ( 個数: <%= supply.quantity %> / 期限なし )
+            </li>
+          <% end %>
+        <% else %>
+          <p>期限のない備蓄品がありません。</p>
         <% end %>
       </ul>
     </section>
