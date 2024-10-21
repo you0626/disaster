@@ -1,77 +1,53 @@
-# テーブル設計
-
-## Users テーブル
-
-| Column             | Type     | Options                   |
-| ------------------ | -------- | ------------------------- |
-| name               | string   | null: false               |
-| email              | string   | null: false, unique: true |
-| encrypted_password | string   | null: false               |
-| last_login_at      | datetime | null: false               |
-
-### Association
-
-- has_many :friendships
-- has_many :posts
-- has_many :disaster_notifications
-- has_many :shelters
-- has_many :supplys
-
-## Friendships テーブル
-
-| Column    | Type       | Options                        |
-| --------- | ---------- | ------------------------------ |
-| user_id   | references | null: false, foreign_key: true |
-| friend_id | references | null: false, foreign_key: true |
-
-### Association
-
-- belongs_to :user
-- belongs_to :friend, class_name: 'User'
-
-## Posts テーブル
-
-| Column   | Type       | Options                        |
-| -------- | ---------- | ------------------------------ |
-| user_id  | references | null: false, foreign_key: true |
-| content  | text       | null: false                    |
-
-### Association
-
-- belongs_to :user
-
-## DisasterNotifications テーブル
-
-| Column  | Type       | Options                        |
-| ------- | ---------- | ------------------------------ |
-| message | text       | null: false                    |
-| user_id | references | null: false, foreign_key: true |
-
-### Association
-
-- belongs_to :user
-
-## Shelters テーブル
-
-| Column      | Type       | Options                        |
-| ----------- | ---------- | ------------------------------ |
-| name        | string     | null: false                    |
-| location    | text       | null: false                    |
-| description | text       |                                |
-| user_id     | references | null: false, foreign_key: true |
-
-### Association
-
-- belongs_to :user
-
-## Supplys テーブル
-
-| Column          | Type       | Options                        |
-| --------------- | ---------- | ------------------------------ |
-| name            | string     | null: false                    |
-| expiration_date | date       | null: false                    |
-| user_id         | references | null: false, foreign_key: true |
-
-### Association
-
-- belongs_to :user
+# アプリケーション名	
+  Shelter Sense  
+ 「避難所の感覚」という意味で、避難所情報や災害対応のセンスを強調しています。
+# アプリケーション概要
+  災害時に必要となる情報を取得できる。また、事前に登録しておく事で災害に備えた準備ができる。
+# URL
+  デプロイ済みのURLを記載。デプロイが済んでいない場合は、デプロイが完了次第記載すること。
+# テスト用アカウント
+  メールアドレス：
+  パスワード：
+# 利用方法
+  1.登録してなくても、地震情報・気象情報・災害時の各マニュアルが使用可能。  
+  2.近場の避難所を直ぐに検索できる。  
+  3.オフラインでも避難所を検索できる。  
+  4.フレンド登録でフレンドの最終ログイン時間が確認でき、メッセージのやり取りもできる。  
+  5.必要な物を事前に登録しておき、購入後は期限を記入して管理できる。
+# アプリケーションを作成した背景
+  昨今の日本では地震が増加しており、いつ大地震が来てもおかしくないと言われている。  
+  その中、不安を抱えている人も多いと思う。  
+  その不安を少しでも取り除けるアプリケーションを作りたいと思った。
+# 実装した機能についての画像やGIFおよびその説明※
+  1.現在地から近い避難所をクリック一回で検索できる。オフラインでも使用できる。  
+  2.気象庁の地震情報と気象情報が表示される。  
+  3.フレンド登録した相手の最終ログイン時間が分かる。メッセージの送信もできる。  
+  4.必要な物を入力しておける。購入した物の期限を入力しておけば期限の近い順から表示してくれる。  
+  5.災害時に役立つ各マニュアルを確認できる。
+# 実装予定の機能
+  1.登録してなくても避難所を検索できる。  
+  2.メッセージに画像を載せる事ができる。  
+  3.他のマニュアルを追加する。
+# データベース設計
+  ER図を添付。
+# 画面遷移図
+  画面遷移図を添付。
+# 開発環境
+  ・HTML  
+  ・JavaScript  
+  ・Ruby  
+  ・API
+# ローカルでの動作方法
+  % git clone https://github.com/we-b/ajax_app_rails7.git  
+  % cd ajax_app_rails7  
+  % bundle install  
+  % rails db:create  
+  % rails db:migrate  
+  GoogleCloudに会員登録し、GoogleMAP使用の為のAPIキーを取得し、コードの中のAPIを置き換える。（利用には料金が発生する。）
+# 工夫したポイント
+  もし自分が災害用アプリを必要とした時に、一つのアプリで済む様に機能を入れた。  
+  また電波が繋がりにくくなっても避難所を検索できる様に、避難所のデータをダウンロードしてオフラインでも使用できるようにした。
+# 改善点
+  制作しているうちに、もっと機能を入れたいって思った機能を追加で実装したい。  
+# 制作時間
+  約三週間
