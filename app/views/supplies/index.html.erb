@@ -3,12 +3,18 @@
   <div class="form-group">
     <%= f.label :name, "必要な物の名前" %>
     <%= f.text_field :name, class: 'input-field' %>
+    <% if @new_required_item.errors[:name].any? %>
+      <div class="error-message"><%= @new_required_item.errors[:name].join(", ") %></div>
+    <% end %>
   </div>
   <div class="form-group">
     <%= f.label :quantity, "数量" %>
     <%= f.number_field :quantity, class: 'input-field' %>
+    <% if @new_required_item.errors[:quantity].any? %>
+      <div class="error-message"><%= @new_required_item.errors[:quantity].join(", ") %></div>
+    <% end %>
   </div>
-  <%= f.hidden_field :type, value: 'required_item' %>
+  <%= f.hidden_field :category, value: 'necessary' %>
   <%= f.submit "追加", class: 'btn-add' %>
 <% end %>
 
@@ -33,16 +39,22 @@
   <div class="form-group">
     <%= f.label :name, "備蓄品の名前" %>
     <%= f.text_field :name, class: 'input-field' %>
+    <% if @new_supply.errors[:name].any? %>
+      <div class="error-message"><%= @new_supply.errors[:name].join(", ") %></div>
+    <% end %>
   </div>
   <div class="form-group">
     <%= f.label :quantity, "数量" %>
     <%= f.number_field :quantity, class: 'input-field' %>
+    <% if @new_supply.errors[:quantity].any? %>
+      <div class="error-message"><%= @new_supply.errors[:quantity].join(", ") %></div>
+    <% end %>
   </div>
   <div class="form-group">
     <%= f.label :expiration_date, "期限" %>
     <%= f.date_field :expiration_date, class: 'input-field' %>
   </div>
-  <%= f.hidden_field :type, value: 'stock' %>
+  <%= f.hidden_field :category, value: 'stock' %>
   <%= f.submit "追加", class: 'btn-add' %>
 <% end %>
 
@@ -57,6 +69,7 @@
     </li>
   <% end %>
 </ul>
+
 
 <style>
   h1.title {
