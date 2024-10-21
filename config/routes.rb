@@ -1,4 +1,7 @@
 Rails.application.routes.draw do
+  devise_for :users, controllers: { sessions: 'devise/sessions' }
+
+  get 'support/index', to: 'support#index', as: 'support_index'
   # typhoon_manual_path へのルート
   get 'typhoon_manual/index', to: 'typhoon_manual#index', as: 'typhoon_manual_index'
   
@@ -13,14 +16,14 @@ Rails.application.routes.draw do
 
   get 'preparedness_manual/index', to: 'preparedness_manual#index', as: 'preparedness_manual_index'
 
-  devise_for :users, controllers: { sessions: 'users/sessions' }
+  
   devise_scope :user do
     get '/users/sign_out' => 'devise/sessions#destroy'
   end
 
   get '/manuals', to: 'manuals#index'
 
-  resources :users do
+  resources :users, except: [:update] do
     resources :friendships, only: [:index, :create, :destroy] do
       collection do
         get 'search', to: 'friendships#search', as: 'search_friendships'

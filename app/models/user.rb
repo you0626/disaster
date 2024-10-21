@@ -20,7 +20,11 @@ class User < ApplicationRecord
 
   after_validation :geocode, if: :current_sign_in_ip_changed?
 
-  
+  # バリデーションの設定
+  validates :name, presence: true, uniqueness: { case_sensitive: false }  # 名前は必須で一意
+  validates :email, presence: true, uniqueness: { case_sensitive: false } # メールアドレスは必須で一意
+  validates :password, presence: true # パスワードは必須
+
   def set_last_login_at
     self.last_login_at = Time.current
   end

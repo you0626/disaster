@@ -10,6 +10,11 @@
     <%= form.submit "検索", class: "friend-search-button" %>
   </div>
 <% end %>
+<% if flash[:alert] %>
+  <div class="alert alert-danger">
+    <%= flash[:alert] %>
+  </div>
+<% end %>
 
 <!-- 検索結果の表示 -->
 <h2>検索結果</h2>
@@ -24,7 +29,7 @@
             <% if current_user.friendships.exists?(friend_id: friend.id) %>
               <p class="already-friend-text">※既にフレンドです</p>
             <% else %>
-              <%= button_to "フレンド登録", friendships_path(friend_id: friend.id), method: :post, class: "friend-add-button" %>
+              <%= button_to "フレンド登録", friendships_path(friend_id: friend.id), method: :post, class: "friend-add-button", remote: true %>
             <% end %>
           </div>
         </div>
@@ -46,7 +51,7 @@
           <div class="friend-actions">
             <% friendship = current_user.friendships.find_by(friend_id: friend.id) %>
             <% if friendship %>
-              <%= button_to "フレンド解除", friendship_path(friendship), method: :delete, class: "friend-remove-button", data: { confirm: "本当にフレンドを解除しますか？" } %>
+              <%= button_to "フレンド解除", friendship_path(friendship), method: :delete, class: "friend-remove-button", data: { confirm: "本当にフレンドを解除しますか？" }, remote: true %>
             <% else %>
               <p class="not-friend-text">フレンドではありません。</p>
             <% end %>
@@ -66,7 +71,7 @@
   <ul class="message-list">
     <% @messages.each do |message| %>
       <li class="message-item">
-        <%= message.sender.name %>: <%= message.content %>
+        差出人：<%= message.sender.name %> / 本文：<%= message.content %>
       </li>
     <% end %>
   </ul>
@@ -195,5 +200,4 @@
     margin-bottom: 10px; /* 下にスペースを追加 */
     margin-left: 40px;
   }
-
 </style>

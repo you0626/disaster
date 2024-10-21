@@ -1,5 +1,7 @@
 <main>
-  <p class="alert alert-warning">※新規登録された方は避難所情報からCSVファイルのダウンロードをお願いします。</p>
+  <% if user_signed_in? %>
+    <p class="alert alert-warning">※新規登録された方は避難所情報からCSVファイルのダウンロードをお願いします。</p>
+  <% end %>
   <!-- 災害通知の表示 -->
     <section class="disaster-notifications">
       <h2>各地災害情報</h2>
@@ -8,25 +10,19 @@
     </section>
 
   <!-- 避難所検索 -->
-  <section class="search-shelter">
+  <% if user_signed_in? %>
+   <section class="search-shelter">
     <h2>一番近い避難所</h2>
-    <% if user_signed_in? %>
       <!-- 現在地から検索ボタン -->
       <button id="search-shelter-button" class="centered-button" >現在地がら一番近い避難所を表示</button>
       <div id="shelter-list"></div>
+      <div id="shelter-details" class="shelter-info">
+        <!-- この部分に避難所の名前、住所、距離が表示されます -->
+      </div>
       <!-- マップを表示するためのdivを追加 -->
       <div id="map" style="width: 100%; height: 400px;"></div>
-    <% else %>
-      <!-- 都道府県か市町村で検索 -->
-      <%= form_with url: search_shelters_path, method: :get, local: true do |form| %>
-        <%= form.label :region, "都道府県 or 市区町村" %>
-        <%= form.text_field :region %>
-        <%= form.submit "検索" %>
-      <% end %>
-     <!-- マップを表示するためのdivを追加 -->
-     <div id="map" style="width: 100%; height: 400px;"></div>
-    <% end %>
-  </section>
+   </section>
+  <% end %>
 
   <% if user_signed_in? %>
     <!-- 必要な物のチェックリスト（ログイン時のみ表示） -->
@@ -112,9 +108,9 @@
             })
             .then(data => {
               const shelters = parseCSV(data);
-              const nearestShelter = findNearestShelter(userLat, userLon, shelters);
+              const { nearestShelter, nearestDistance } = findNearestShelter(userLat, userLon, shelters);
               if (nearestShelter) {
-                showShelterOnMap(nearestShelter);
+                showShelterOnMap(nearestShelter, nearestDistance);
               } else {
                 console.error('No nearby shelters found.');
               }
@@ -148,6 +144,7 @@
   function findNearestShelter(userLat, userLon, shelters) {
     let nearestShelter = null;
     let minDistance = Infinity;
+    let nearestDistance = 0;
 
     shelters.forEach(shelter => {
       const shelterLat = parseFloat(shelter['緯度']);
@@ -157,16 +154,19 @@
       if (distance < minDistance) {
         minDistance = distance;
         nearestShelter = shelter;
+        nearestDistance = distance;
       }
     });
 
-    return nearestShelter;
+    return { nearestShelter, nearestDistance };
   }
 
-  function showShelterOnMap(shelter) {
+  function showShelterOnMap(shelter, distance) {
     const lat = parseFloat(shelter['緯度']);
     const lon = parseFloat(shelter['経度']);
-    
+    const shelterName = shelter['施設・場所名'];  // 避難所の名前
+    const shelterAddress = shelter['住所'];  // 避難所の住所
+
     // マーカーを作成
     if (!marker) {
       marker = new google.maps.Marker({
@@ -179,6 +179,15 @@
 
     // マップを新しい位置に移動
     map.setCenter({ lat: lat, lng: lon });
+
+    // 避難所の名前、住所、距離を表示
+    const shelterDetailsDiv = document.getElementById('shelter-details');
+    shelterDetailsDiv.innerHTML = `
+      <h3>最寄りの避難所情報</h3>
+      <p><strong>施設名:</strong> ${shelterName}</p>
+      <p><strong>住所:</strong> ${shelterAddress}</p>
+      <p><strong>距離:</strong> ${distance.toFixed(2)} km</p>
+    `;
   }
 
   function haversineDistance(lat1, lon1, lat2, lon2) {

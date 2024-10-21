@@ -1,4 +1,12 @@
 <!-- メッセージの新規作成リンク -->
+<div class="create-message-container">
+  <%= link_to '新しいメッセージを作成', new_message_path, class: 'create-message-link' %>
+</div>
+
+<!-- メッセージ一覧タイトル -->
+<h2 class="message-list-title">メッセージ一覧</h2>
+<p class="message-warning">注意: 最新の100件のメッセージのみが表示され、それ以前のメッセージは自動で削除されます。</p>
+
 <ul class="message-list">
   <% @messages.order(updated_at: :desc).each do |message| %> <!-- updated_at順に並び替え -->
     <li class="message-item">
@@ -25,8 +33,20 @@
   <% end %>
 </ul>
 
-
 <style>
+  .message-list-title {
+    font-size: 24px;
+    color: blue;
+    text-decoration: underline;
+    margin: 20px 0; /* Add some margin for spacing */
+  }
+
+  .message-warning {
+    color: red;
+    margin-bottom: 20px; /* Space between notice and message list */
+    font-weight: normal; /* Optional: make the warning text normal weight */
+  }
+
   .create-message-container {
     text-align: center; /* 中央に配置 */
     margin-bottom: 20px;

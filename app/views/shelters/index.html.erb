@@ -26,7 +26,9 @@
 <!-- 検索結果を少し下に、右に配置 -->
 <div id="shelter-list" class="shelter-list">
   <h2>検索結果の表示リスト</h2>
-  <p class="result-message">※現在地から近い順に表示されます。クリックするとマップが表示されます。</p>
+  <p class="result-message">※現在地から近い順に表示されます。クリックするとマップが表示されます。
+    表示されない場合はページの更新をしてください。
+  </p>
 </div>
 
 <!-- 地図を少し下に配置 -->
@@ -136,9 +138,22 @@ let map;
 let marker;
 let userLat, userLon;
 
-document.addEventListener('DOMContentLoaded', function () {
-  initMap(); // マップの初期化
+  // Google Maps APIが読み込まれた後に呼び出される
+  function initMap() {
+    map = new google.maps.Map(document.getElementById('map'), {
+      center: { lat: 35.6895, lng: 139.6917 }, // デフォルトで東京
+      zoom: 12
+    });
 
+    // 位置情報の取得
+    if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition(function(position) {
+        userLat = position.coords.latitude;
+        userLon = position.coords.longitude;
+      });
+    }
+
+    // CSVデータの取得と処理
   const csvFilePath = "<%= download_shelters_path %>";
 
   fetch(csvFilePath)
@@ -151,15 +166,7 @@ document.addEventListener('DOMContentLoaded', function () {
     .then(data => {
       const shelters = parseCSV(data);
       
-      // ユーザーの位置を取得
-      if (navigator.geolocation) {
-        navigator.geolocation.getCurrentPosition(function(position) {
-          userLat = position.coords.latitude;
-          userLon = position.coords.longitude;
-        });
-      }
-
-      // 近くの避難所を表示ボタンのクリックイベント
+        // 「近くの避難所を表示」ボタンのクリックイベント
       document.getElementById('show-nearby-shelters').addEventListener('click', function () {
         if (userLat !== undefined && userLon !== undefined) {
           const sortedShelters = shelters.map(shelter => {
@@ -191,7 +198,7 @@ document.addEventListener('DOMContentLoaded', function () {
     .catch(error => {
       console.error('There was a problem with the fetch operation:', error);
     });
-});
+  }
 
 function parseCSV(data) {
   const lines = data.split('\n');
@@ -269,13 +276,9 @@ function haversineDistance(lat1, lon1, lat2, lon2) {
             Math.cos(lat1 * Math.PI / 180) * Math.cos(lat2 * Math.PI / 180) *
             Math.sin(dLon / 2) * Math.sin(dLon / 2);
   const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
-  return R * c; // 距離（km）
-}
-
-function initMap() {
-  map = new google.maps.Map(document.getElementById('map'), {
-    center: { lat: 35.6895, lng: 139.6917 }, // デフォルトで東京
-    zoom: 12
-  });
+    return R * c;
 }
 </script>
+
+<!-- Google Maps APIのスクリプトを非同期で読み込む -->
+<script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyA565GWcpGYFNUO2UPF9bRmMej7t4PW5ZY&callback=initMap"></script>

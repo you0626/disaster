@@ -1,44 +1,35 @@
 class FriendshipsController < ApplicationController
   before_action :authenticate_user!
+  before_action :set_messages, only: [:index, :create, :search]
 
   def index
-    @friends = current_user.friends  # ユーザーのフレンドを取得
-    @search_results = []              # 検索結果を初期化
+    @friends = current_user.friends
+    @search_results = []
     @friendships = Friendship.where(user_id: current_user.id)
     @user = current_user
-    
-    # メッセージをMessageモデルから取得し、最新5件を表示
-    @messages = Message.where(recipient_id: @user.id).order(created_at: :desc).limit(5)
 
     if params[:name].present?
-      @search_results = User.where("name LIKE ?", "%#{params[:name]}%").where.not(id: current_user.id) # ユーザー名で検索
+      @search_results = User.where("name LIKE ?", "%#{params[:name]}%").where.not(id: current_user.id)
     end
-    
   end
 
   def create
-    @friendship = Friendship.new(friendship_params)
     @friendship = current_user.friendships.build(friend_id: params[:friend_id])
     
     if @friendship.save
-      # フレンド登録成功時にメッセージを送信
       Message.create(
         sender_id: current_user.id,
-        recipient_id: @friendship.friend_id, # フレンド登録された相手のID
+        recipient_id: @friendship.friend_id,
         content: "#{current_user.name}さんからフレンド登録されました"
       )
-      
-      redirect_to friendships_path, notice: 'フレンド登録が完了しました。'
+      redirect_back fallback_location: root_path
     else
       flash.now[:alert] = "フレンド登録に失敗しました。"
-      # 失敗した場合はindexを再表示
       @friends = current_user.friends
       @search_results = []
-      @messages = Message.where(recipient_id: current_user.id).order(created_at: :desc).limit(5)
       render :index
     end
   end
-
 
   def destroy
     friendship = Friendship.find(params[:id])
@@ -47,29 +38,30 @@ class FriendshipsController < ApplicationController
     else
       flash[:alert] = "フレンド解除に失敗しました。"
     end
-    redirect_to user_friendships_path(current_user) # 適切なリダイレクト先
+    redirect_back fallback_location: root_path
   end
 
   def search
-    @user = User.find(params[:user_id]) # ユーザーを取得
-    @friendships = Friendship.where(user_id: @user.id) # ユーザーのフレンドシップを取得
+    @user = User.find(params[:user_id])
+    @friendships = Friendship.where(user_id: @user.id)
   
-    # 名前でフレンドを検索
     if params[:name].present?
       @friends = User.where("name LIKE ?", "%#{params[:name]}%").where.not(id: current_user.id)
     else
-      @friends = [] # 検索結果を空にする
+      @friends = []
     end
   
-    # 既存のフレンドリストを取得
     @existing_friends = current_user.friends
-  
-    render :index # indexテンプレートをレンダリング
+    render :index
   end
 
   private
 
   def friendship_params
-    params.permit(:friend_id).merge(user_id: current_user.id) # friend_idは友達のユーザーIDを指すと仮定
+    params.permit(:friend_id).merge(user_id: current_user.id)
+  end
+
+  def set_messages
+    @messages = Message.where(recipient_id: current_user.id).order(created_at: :desc).limit(5)
   end
 end
