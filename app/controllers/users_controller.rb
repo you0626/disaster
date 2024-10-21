@@ -1,5 +1,6 @@
 class UsersController < ApplicationController
   before_action :authenticate_user!, except: [:index]
+  before_action :set_user, only: [:update]
   before_action :update_user_last_login_at, if: :user_signed_in?
 
   def index
@@ -27,7 +28,6 @@ class UsersController < ApplicationController
   end
 
   def create
-    @user = User.new(user_params)
     if @user.save
       redirect_to @user, notice: 'ユーザーが作成されました。'
     else
@@ -40,7 +40,8 @@ class UsersController < ApplicationController
   end
 
   def update
-    @user = User.find(params[:id])
+    Rails.logger.debug(params.inspect)
+    @user = User.find(user_params)
     if @user.update(user_params)
       redirect_to @user, notice: 'ユーザーが更新されました。'
     else
@@ -64,8 +65,13 @@ class UsersController < ApplicationController
 
   private
 
+  def set_user
+    @user = User.find(params[:id]) # IDを正しく取得する
+  end
+
+
   def user_params
-    params.require(:user).permit(:email, :password, :password_confirmation)
+    params.require(:user).permit(:email, :password, :password_confirmation, :name)
   end
 
   def update_user_last_login_at
