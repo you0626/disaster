@@ -79,6 +79,12 @@
   <p class="no-messages">メッセージはありません。</p>
 <% end %>
 
+<!-- トップページに戻るリンク -->
+<div>
+  <%= link_to 'トップページに戻る', root_path, class: 'center-link' %>
+</div>
+
+
 <script>
   document.addEventListener('turbolinks:load', () => {
     document.addEventListener('ajax:success', (event) => {
