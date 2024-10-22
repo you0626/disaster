@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2024_10_16_191643) do
+ActiveRecord::Schema[7.0].define(version: 2024_10_16_182420) do
   create_table "active_storage_attachments", charset: "utf8mb3", force: :cascade do |t|
     t.string "name", null: false
     t.string "record_type", null: false
@@ -47,11 +47,6 @@ ActiveRecord::Schema[7.0].define(version: 2024_10_16_191643) do
     t.float "latitude"
     t.float "longitude"
     t.string "category"
-    t.string "title"
-    t.datetime "occurred_at"
-    t.float "magnitude"
-    t.string "max_intensity"
-    t.string "location"
     t.index ["user_id"], name: "index_disaster_notifications_on_user_id"
   end
 
