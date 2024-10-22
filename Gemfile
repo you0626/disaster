@@ -95,3 +95,9 @@ gem 'geocoder'
 gem 'rspec-rails'
 
 gem 'bootstrap', '~> 5.1.3'  # バージョンは適宜調整
+
+gem 'dotenv-rails', groups: [:development, :test]
+
+group :production do
+  gem 'unicorn', '6.1.0'
+end
