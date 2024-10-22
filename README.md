@@ -29,9 +29,9 @@
   2.メッセージに画像を載せる事ができる。  
   3.他のマニュアルを追加する。
 # データベース設計
-  ER図を添付。
+  [![Image from Gyazo](https://i.gyazo.com/b774f14d12c285c1864a84982bb4c59a.png)](https://gyazo.com/b774f14d12c285c1864a84982bb4c59a)
 # 画面遷移図
-  画面遷移図を添付。
+  [![Image from Gyazo](https://i.gyazo.com/4503fdb3da9de370cf74744ea50a4aa7.png)](https://gyazo.com/4503fdb3da9de370cf74744ea50a4aa7)
 # 開発環境
   ・HTML  
   ・JavaScript  
