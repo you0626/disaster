@@ -38,7 +38,7 @@
   ・Ruby  
   ・API
 # ローカルでの動作方法
-  % git clone https://github.com/we-b/ajax_app_rails7.git  
+  % git clone https://github.com/you0626/disaster.git  
   % cd ajax_app_rails7  
   % bundle install  
   % rails db:create  
