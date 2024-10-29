@@ -19,11 +19,21 @@
   その中、不安を抱えている人も多いと思う。  
   その不安を少しでも取り除けるアプリケーションを作りたいと思った。
 # 実装した機能についての画像やGIFおよびその説明※
-  1.現在地から近い避難所をクリック一回で検索できる。オフラインでも使用できる。  
+  1.現在地から近い避難所をクリック一回で検索できる。オフラインでも使用できる。(ACMにて証明書申請中の為、使用不可。ローカルでは使える。)  
+  [![Image from Gyazo](https://i.gyazo.com/ebd47e73d2227047f2b20336e4bc8e63.gif)](https://gyazo.com/ebd47e73d2227047f2b20336e4bc8e63)  
+  [![Image from Gyazo](https://i.gyazo.com/9674a0d76f5a6133c18de8d219ad57b3.gif)](https://gyazo.com/9674a0d76f5a6133c18de8d219ad57b3)  
+  [![Image from Gyazo](https://i.gyazo.com/56415dc8abd55526f7536e6c7ec07880.gif)](https://gyazo.com/56415dc8abd55526f7536e6c7ec07880)  
   2.気象庁の地震情報と気象情報が表示される。  
-  3.フレンド登録した相手の最終ログイン時間が分かる。メッセージの送信もできる。  
+  地震情報（リアルタイム更新）[![Image from Gyazo](https://i.gyazo.com/3276431233bb077b261e02257627c578.png)](https://gyazo.com/3276431233bb077b261e02257627c578)  
+  気象情報（データ量が多い為、手動更新）[![Image from Gyazo](https://i.gyazo.com/db449df28f974719c036249badf59944.png)](https://gyazo.com/db449df28f974719c036249badf59944)  
+  3.フレンド登録した相手の最終ログイン時間が分かる。メッセージの送信もできる。 
+  [![Image from Gyazo](https://i.gyazo.com/04df5e6c9fc8429e540b9e96b0d8dbe3.png)](https://gyazo.com/04df5e6c9fc8429e540b9e96b0d8dbe3)   
+  [![Image from Gyazo](https://i.gyazo.com/804a5839d304d1def94c182afb33a9c9.png)](https://gyazo.com/804a5839d304d1def94c182afb33a9c9)  
   4.必要な物を入力しておける。購入した物の期限を入力しておけば期限の近い順から表示してくれる。  
-  5.災害時に役立つ各マニュアルを確認できる。
+  [![Image from Gyazo](https://i.gyazo.com/bf73f558c64bb957e15326eadd21fb9e.png)](https://gyazo.com/bf73f558c64bb957e15326eadd21fb9e)  
+  5.災害時に役立つ各マニュアルを確認できる。  
+  [![Image from Gyazo](https://i.gyazo.com/b5c3415defc0dfdcb289be1f3112616d.png)](https://gyazo.com/b5c3415defc0dfdcb289be1f3112616d)  
+  [![Image from Gyazo](https://i.gyazo.com/da09b178e7f744a3d850cca1a53a6a0f.png)](https://gyazo.com/da09b178e7f744a3d850cca1a53a6a0f)  
 # 実装予定の機能
   1.登録してなくても避難所を検索できる。  
   2.メッセージに画像を載せる事ができる。  
