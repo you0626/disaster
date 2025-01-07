@@ -16,6 +16,8 @@ Rails.application.routes.draw do
 
   get 'preparedness_manual/index', to: 'preparedness_manual#index', as: 'preparedness_manual_index'
 
+  get 'earthquakes/index'
+
   
   devise_scope :user do
     get '/users/sign_out' => 'devise/sessions#destroy'

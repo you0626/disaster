@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>地震災害情報</title>
+</head>
+<body>
+  <!-- ヘッダー -->
+  <header class="header">
+    <h1>地震災害情報</h1>
+    <p>近い将来の発生が懸念される大規模地震とその対策</p>
+  </header>
+
+  <!-- メインコンテンツ -->
+  <main class="content">
+    <!-- セクション: 地震の概要 -->
+    <section class="overview">
+      <h2>高い確率で発生が予想されている大地震</h2>
+      <p>30年以内の発生確率が1％未満でも発生した熊本地震（布田川断層帯・日奈久断層帯）。</p>
+      <p>日本国内で想定されている大規模地震には以下が含まれます:</p>
+      <ul>
+        <li>南海トラフ地震</li>
+        <li>日本海溝・千島海溝周辺海溝型地震</li>
+        <li>首都直下地震</li>
+        <li>中部圏・近畿圏直下地震</li>
+      </ul>
+      <p>
+        特に<strong>南海トラフ地震</strong>と<strong>首都直下地震</strong>は、30年以内の発生確率が70％とされており、非常に高い注意が必要です。
+      </p>
+    </section>
+
+    <!-- セクション: 大規模地震のリスト -->
+    <section class="earthquake-list">
+      <h2>想定される大規模地震とその確率</h2>
+      <table>
+        <thead>
+          <tr>
+            <th>地震の種類</th>
+            <th>発生確率</th>
+            <th>主な被害地域</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>南海トラフ巨大地震</td>
+            <td>70％</td>
+            <td>関東～九州の広範囲</td>
+          </tr>
+          <tr>
+            <td>首都直下地震</td>
+            <td>70％</td>
+            <td>東京、神奈川、埼玉、千葉など</td>
+          </tr>
+        </tbody>
+      </table>
+    </section>
+
+    <!-- セクション: 被害想定 -->
+    <section class="damage-estimation">
+      <h2>想定される被害</h2>
+      <p>中央防災会議のデータによると、以下のような被害が予想されています。</p>
+      <table>
+        <thead>
+          <tr>
+            <th>地震の種類</th>
+            <th>死者・行方不明者数</th>
+            <th>住宅全壊戸数</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>南海トラフ巨大地震</td>
+            <td>約32.3万人</td>
+            <td>約238.6万棟</td>
+          </tr>
+          <tr>
+            <td>首都直下地震</td>
+            <td>約2.3万人</td>
+            <td>約61万棟</td>
+          </tr>
+          <tr>
+            <td>東日本大震災 (参考)</td>
+            <td>22,118人</td>
+            <td>12万1,768棟</td>
+          </tr>
+        </tbody>
+      </table>
+    </section>
+
+    <!-- セクション: 対策の必要性 -->
+    <section class="preparation">
+      <h2>どこで起きてもおかしくない地震</h2>
+      <p>
+        日本は地震多発国であり、北海道から九州まで約2,000もの活断層が確認されています。さらに、見つかっていない活断層も多いとされており、どの地域でも地震が発生する可能性があります。
+      </p>
+      <p>常日頃から防災意識を高め、準備を進めることが重要です。</p>
+    </section>
+  </main>
+
+  <!-- フッター -->
+  <footer class="footer">
+    <p>データ提供: 地震調査研究推進本部、内閣府</p>
+  </footer>
+</body>
+</html>
+
+<style>
+/* 全体設定 */
+body {
+  font-family: 'Arial', sans-serif;
+  line-height: 1.6;
+  background-color: #f2f6ff;
+  margin: 0;
+  padding: 0;
+  color: #333;
+}
+
+/* ヘッダー */
+.header {
+  background-color: #003366;
+  color: white;
+  text-align: center;
+  padding: 20px 0;
+}
+
+.header h1 {
+  margin: 0;
+  font-size: 28px;
+  letter-spacing: 2px;
+}
+
+.header p {
+  margin: 5px 0 0;
+  font-size: 16px;
+}
+
+/* コンテンツ */
+.content {
+  max-width: 900px;
+  margin: 20px auto;
+  padding: 20px;
+  background: white;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.content h2 {
+  color: #0056b3;
+  border-bottom: 3px solid #cce7ff;
+  padding-bottom: 5px;
+  margin-bottom: 20px;
+}
+
+/* 概要セクション */
+.overview {
+  margin-bottom: 20px;
+}
+
+.overview ul {
+  padding-left: 20px;
+}
+
+.overview ul li {
+  margin-bottom: 10px;
+}
+
+/* テーブル */
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 20px 0;
+  background-color: #f9f9f9;
+}
+
+table, th, td {
+  border: 1px solid #ddd;
+}
+
+th, td {
+  padding: 12px 15px;
+  text-align: left;
+}
+
+th {
+  background-color: #0056b3;
+  color: white;
+  font-weight: bold;
+}
+
+tr:nth-child(even) {
+  background-color: #f2f6ff;
+}
+
+tr:hover {
+  background-color: #d9ecff;
+}
+
+/* フッター */
+.footer {
+  text-align: center;
+  margin-top: 30px;
+  padding: 15px 0;
+  background-color: #003366;
+  color: white;
+  font-size: 14px;
+}
+
+.footer p {
+  margin: 5px 0;
+}
+
+/* リンク */
+a {
+  color: #0056b3;
+  text-decoration: none;
+}
+
+a:hover {
+  text-decoration: underline;
+}
+</style>
