@@ -1,17 +1,24 @@
 class WeatherNotificationsController < ApplicationController
   require 'net/http'
   require 'json'
-
   def index
-    # fetched_atで降順に並べた後、地方ごとにグループ化
-    @weather_notifications = WeatherNotification.all.order(fetched_at: :asc)
+    if user_signed_in?
+      @weather_notifications = current_user.weather_notifications.order(fetched_at: :asc)
+    else
+      @weather_notifications = WeatherNotification.where(user_id: nil).order(fetched_at: :asc)
+    end
+
     @grouped_notifications = @weather_notifications.group_by { |notification| notification.title }
   end
 
   def fetch_and_save
 
     # 既存の気象情報を削除
-    WeatherNotification.delete_all
+    if user_signed_in?
+      current_user.weather_notifications.delete_all
+    else
+      WeatherNotification.where(user_id: nil).delete_all
+    end
     
     # 地方ごとの地域IDを定義
     regions = {
@@ -96,7 +103,10 @@ class WeatherNotificationsController < ApplicationController
         response = Net::HTTP.get(URI(url))
 
         # デバッグ用にレスポンスの中身を確認
-        Rails.logger.info "取得したデータ (地域ID: #{region_id}): #{response}"
+        Rails.logger.info(
+          "取得したデータ (地域ID: #{region_id}): " +
+          response.to_s.encode('UTF-8', invalid: :replace, undef: :replace)
+       )
 
         # レスポンスが空でないかチェック
         if response.present?
@@ -106,7 +116,8 @@ class WeatherNotificationsController < ApplicationController
           WeatherNotification.create!(
             title: "#{region_name}の気象情報",
             content: data['text'],
-            fetched_at: Time.current
+            fetched_at: Time.current,
+            user_id: current_user&.id
           )
         else
           Rails.logger.error "地域ID: #{region_id} の気象情報を取得できませんでした。"

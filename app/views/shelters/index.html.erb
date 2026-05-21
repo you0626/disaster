@@ -157,6 +157,10 @@
 let map;
 let marker;
 let userLat, userLon;
+let directionsService;
+let directionsRenderer;
+let currentLocationMarker;
+let shelterMarker;
 
 // Google Maps APIが読み込まれた後に呼び出される
 function initMap() {
@@ -165,11 +169,29 @@ function initMap() {
     zoom: 12
   });
 
+  directionsService = new google.maps.DirectionsService();
+  directionsRenderer = new google.maps.DirectionsRenderer();
+
+  directionsRenderer.setMap(map);
+
   // 位置情報の取得
   if (navigator.geolocation) {
     navigator.geolocation.getCurrentPosition(function(position) {
       userLat = position.coords.latitude;
       userLon = position.coords.longitude;
+
+        // 現在地ピン（青）
+      currentLocationMarker = new google.maps.Marker({
+        position: { lat: userLat, lng: userLon },
+        map: map,
+        label: {
+          text: "You",
+          color: "white"
+        },
+        icon: "http://maps.google.com/mapfiles/ms/icons/blue-dot.png"
+      });
+
+      map.setCenter({ lat: userLat, lng: userLon });
     });
   }
 
@@ -270,6 +292,22 @@ function displayShelters(shelters, userLat, userLon) {
 
   shelters.forEach(shelter => {
     const shelterItem = document.createElement('div');
+
+    shelterItem.style.cursor = 'pointer';
+    shelterItem.style.padding = '10px';
+    shelterItem.style.marginBottom = '8px';
+    shelterItem.style.border = '1px solid #ccc';
+    shelterItem.style.borderRadius = '5px';
+    shelterItem.style.transition = '0.2s';
+
+    shelterItem.addEventListener('mouseover', function() {
+      shelterItem.style.backgroundColor = '#e3f2fd';
+    });
+
+    shelterItem.addEventListener('mouseout', function() {
+      shelterItem.style.backgroundColor = '';
+    });
+      
     const lat = parseFloat(shelter['緯度']);
     const lon = parseFloat(shelter['経度']);
 
@@ -290,16 +328,43 @@ function displayShelters(shelters, userLat, userLon) {
 }
 
 function showShelterOnMap(lat, lon) {
-  if (!marker) {
-    marker = new google.maps.Marker({
+  if (!shelterMarker) {
+    shelterMarker = new google.maps.Marker({
       position: { lat: lat, lng: lon },
-      map: map
+      map: map,
+      label: "避難所",
+      icon: "http://maps.google.com/mapfiles/ms/icons/red-dot.png"
     });
   } else {
-    marker.setPosition({ lat: lat, lng: lon });
+    shelterMarker.setPosition({ lat: lat, lng: lon });
   }
 
   map.setCenter({ lat: lat, lng: lon });
+  map.setZoom(15);
+}
+
+function showRouteToShelter(lat, lon) {
+  if (userLat === undefined || userLon === undefined) {
+    alert('現在地を取得できませんでした。');
+    return;
+  }
+
+  const request = {
+    origin: { lat: userLat, lng: userLon },
+    destination: { lat: lat, lng: lon },
+    travelMode: google.maps.TravelMode.WALKING
+  };
+
+  directionsService.route(request, function(result, status) {
+    console.log("Directions status:", status);
+    console.log("Result:", result);
+
+    if (status === 'OK') {
+      directionsRenderer.setDirections(result);
+    } else {
+      alert('徒歩ルートを取得できませんでした: ' + status);
+    }
+  });
 }
 
 function haversineDistance(lat1, lon1, lat2, lon2) {

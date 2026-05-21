@@ -10,6 +10,7 @@ class User < ApplicationRecord
   has_many :supplies
   has_many :sent_messages, class_name: "Message", foreign_key: "sender_id"
   has_many :received_messages, class_name: "Message", foreign_key: "recipient_id"
+  has_many :weather_notifications
 
   geocoded_by :current_sign_in_ip do |obj, results|
     if geo = results.first

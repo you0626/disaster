@@ -15,7 +15,7 @@ namespace :weather_info do
     # Nokogiriでパース
     doc = Nokogiri::XML(xml_data)
 
-    # 必要な情報を抽出（例: タイトルや詳細など）
+    # 必要な情報を抽出（タイトルや詳細など）
     title = doc.xpath('//Title').text
     body_text = doc.xpath('//Text').text
 
@@ -23,11 +23,21 @@ namespace :weather_info do
     Rails.logger.info "タイトル: #{title}"
     Rails.logger.info "詳細: #{body_text}"
 
-    # 取得したデータをデータベースに保存する例
+    # 取得したデータをデータベースに保存する
+    WeatherNotification.where(user_id: nil).delete_all
+
     WeatherNotification.create!(
       title: title,
       content: body_text,
-      fetched_at: Time.zone.now
+      fetched_at: Time.current,
+      user_id: nil
     )
+
+   WeatherNotification.create!(
+     title: title,
+     content: body_text,
+     fetched_at: Time.current,
+     user_id: current_user&.id
+   )
   end
 end
